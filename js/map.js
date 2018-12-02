@@ -26,7 +26,7 @@ var OFFER_CHECKIN = [
   '14:00'
 ];
 
-var OFFER_CHECKOUT = [ // если у них одинаковые данные, можно объединить в один с каким-нибудь общим названием типа time?
+var OFFER_CHECKOUT = [
   '12:00',
   '13:00',
   '14:00'
@@ -49,12 +49,14 @@ var OFFER_PHOTOS = [
 
 var map = document.querySelector('.map');
 var pinsArea = document.querySelector('.map__pins');
-var similarMapPin = document.querySelector('#pin').content.querySelector('.map__pin');
+var mapPinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
+var mapCardTemplate = document.querySelector('#card').content.querySelector('.map__card');
+var mapContainer = map.querySelector('.map__filters-container');
 
 // рандомный элемент массива
-var getRandomValue = function (array) {
-  var RandomValue = Math.floor(Math.random() * array.length);
-  return RandomValue;
+var getRandomArrayItem = function (array) {
+  var randomArrayItem = array[Math.floor(Math.random() * array.length)];
+  return randomArrayItem;
 };
 
 // рандомное число из заданных
@@ -63,26 +65,55 @@ var getRandomNumber = function (min, max) {
   return randomNumber;
 };
 
+// функция создания массива рандомной длины - features
+var getFeaturesArray = function (array) {
+  var randomNum = getRandomNumber(1, array.length + 1);
+  return array.slice(0, randomNum); // возвращает новый массив
+};
+
+// функция создания списка - features
+var getFeaturesList = function (features) {
+  var featuresList = '';
+  for (var i = 0; i < features.length; i++) {
+    featuresList += '<li class="popup__feature popup__feature--' + features[i] + '"></li>';
+  }
+  return featuresList;
+};
+
+// функция определния типа жилья
+var defineOfferType = function (advert) {
+  var offerType = '';
+  if (advert.offer.type === 'flat') {
+    offerType = 'Квартира';
+  } else if (advert.offer.type === 'bungalo') {
+    offerType = 'Бунгало';
+  } else if (advert.offer.type === 'house') {
+    offerType = 'Дом';
+  } else if (advert.offer.type === 'palace') {
+    offerType = 'Дворец';
+  }
+  return offerType;
+};
+
+
 // функция создания одного объекта - объявления(массив)
-// 1.сейчас данные повторяются, хотя не должны. Т.е. рандом не подходит или еть какой-то другой метод?
-// 2.массив строк случайной длины - предполагает, что не одно значение, а несколько, если я правильно поняла. Пока вообще не могу представить как это реализовать.
 var generateOneAdvert = function () {
   var advert = {
     author: {
       avatar: 'img/avatars/user' + '0' + getRandomNumber(1, 8) + '.png'
     },
     offer: {
-      title: OFFER_TITLES[getRandomValue(OFFER_TITLES)],
+      title: getRandomArrayItem(OFFER_TITLES),
       address: getRandomNumber(0, 1200) + ', ' + getRandomNumber(130, 630),
       price: getRandomNumber(1000, 1000000),
-      type: OFFER_TYPES[getRandomValue(OFFER_TYPES)],
+      type: getRandomArrayItem(OFFER_TYPES),
       rooms: getRandomNumber(1, 5),
-      guests: getRandomNumber(1, 6), // сколько гостей, если не указано в задании?
-      checkin: OFFER_CHECKIN[getRandomValue(OFFER_CHECKIN)],
-      checkout: OFFER_CHECKOUT[getRandomValue(OFFER_CHECKOUT)],
-      features: OFFER_FEATURES[getRandomValue(OFFER_FEATURES)],
+      guests: getRandomNumber(1, 6),
+      checkin: getRandomArrayItem(OFFER_CHECKIN),
+      checkout: getRandomArrayItem(OFFER_CHECKOUT),
+      features: getFeaturesArray(OFFER_FEATURES),
       description: ' ',
-      photos: OFFER_PHOTOS[getRandomValue(OFFER_PHOTOS)]
+      photos: OFFER_PHOTOS
     },
     location: {
       locationX: getRandomNumber(0, 1200),
@@ -94,9 +125,9 @@ var generateOneAdvert = function () {
 
 
 // функция создания массива объектов - объявлений
-var generateAllAdverts = function () {
+var generateAllAdverts = function (number) {
   var adverts = [];
-  for (var i = 0; i < ADVERT_NUMBER; i++) {
+  for (var i = 0; i < number; i++) {
     var advert = generateOneAdvert();
     adverts.push(advert);
   }
@@ -105,7 +136,7 @@ var generateAllAdverts = function () {
 
 // функция создания одной метки на карте
 var renderMapPin = function (advert) {
-  var mapPinElement = similarMapPin.cloneNode(true);
+  var mapPinElement = mapPinTemplate.cloneNode(true);
   mapPinElement.style.left = advert.location.locationX + 'px';
   mapPinElement.style.top = advert.location.locationY + 'px';
   mapPinElement.querySelector('img').src = advert.author.avatar;
@@ -113,15 +144,41 @@ var renderMapPin = function (advert) {
   return mapPinElement;
 };
 
-// функция создания и отрисовки меток
-var createMapPinsFragment = function () {
+// функция создания меток
+var renderMapPinsFragment = function (number) {
   var fragment = document.createDocumentFragment();
-  var adverts = generateAllAdverts();
-  for (var j = 0; j < adverts.length; j++) {
-    fragment.appendChild(renderMapPin(adverts[j]));
-    pinsArea.appendChild(fragment);
+  var adverts = generateAllAdverts(number);
+  for (var i = 0; i < adverts.length; i++) {
+    fragment.appendChild(renderMapPin(adverts[i]));
   }
+  return fragment;
 };
-createMapPinsFragment();
 
+// функция отрисовки меток
+var drawMapsPin = function () {
+  pinsArea.appendChild(renderMapPinsFragment(ADVERT_NUMBER));
+};
+
+drawMapsPin();
 map.classList.remove('map--faded');
+
+// функция создания объявления
+var renderCards = function (advert) {
+  var cardElement = mapCardTemplate.cloneNode(true);
+  cardElement.querySelector('.popup__title').textContent = advert.offer.title;
+  cardElement.querySelector('.popup__text--address').textContent = advert.offer.address;
+  cardElement.querySelector('.popup__text--price').textContent = advert.offer.price + '₽/ночь';
+  cardElement.querySelector('.popup__type').textContent = defineOfferType(advert);
+  cardElement.querySelector('.popup__text--capacity').textContent = advert.offer.rooms + ' комнаты для '
+  + advert.offer.guests + ' гостей';
+  cardElement.querySelector('.popup__text--time').textContent = 'Заезд после ' + advert.offer.checkin
+  + ', выезд до ' + advert.offer.checkout;
+  cardElement.querySelector('.popup__features').insertAdjacentHTML('afterbegin', getFeaturesList(advert.offer.features));
+  cardElement.querySelector('.popup__description').textContent = advert.offer.description;
+  cardElement.querySelector('.popup__photos').src = advert.offer.photos; // здесь будут фотки
+  cardElement.querySelector('.popup__avatar').src = advert.author.avatar;
+
+  return cardElement;
+};
+
+map.insertBefore(renderCards(generateAllAdverts(8)[0]), mapContainer);
