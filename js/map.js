@@ -53,6 +53,7 @@ var mapPinTemplate = document.querySelector('#pin').content.querySelector('.map_
 var mapCardTemplate = document.querySelector('#card').content.querySelector('.map__card');
 var mapContainer = map.querySelector('.map__filters-container');
 
+
 // рандомный элемент массива
 var getRandomArrayItem = function (array) {
   var randomArrayItem = array[Math.floor(Math.random() * array.length)];
@@ -66,18 +67,36 @@ var getRandomNumber = function (min, max) {
 };
 
 // функция создания массива рандомной длины - features
-var getFeaturesArray = function (array) {
+var trimToRandomArrayLength = function (array) {
   var randomNum = getRandomNumber(1, array.length + 1);
   return array.slice(0, randomNum); // возвращает новый массив
 };
 
 // функция создания списка - features
 var getFeaturesList = function (features) {
-  var featuresList = '';
+  var list = document.createDocumentFragment();
   for (var i = 0; i < features.length; i++) {
-    featuresList += '<li class="popup__feature popup__feature--' + features[i] + '"></li>';
+    var listItemElement = document.createElement('li');
+    listItemElement.classList.add('popup__feature');
+    listItemElement.classList.add('popup__feature--' + features[i]);
+    list.appendChild(listItemElement);
   }
-  return featuresList;
+  return list;
+};
+
+// функция создания фото жилья
+var getPhotos = function (photos) {
+  var photosContainer = document.createDocumentFragment();
+  for (var i = 0; i < photos.length; i++) {
+    var photo = document.createElement('img');
+    photo.classList.add('popup__photo');
+    photo.src = photos[i];
+    photo.alt = 'Фотография жилья';
+    photo.width = 45;
+    photo.height = 40;
+    photosContainer.appendChild(photo);
+  }
+  return photosContainer;
 };
 
 // функция определния типа жилья
@@ -95,12 +114,34 @@ var defineOfferType = function (advert) {
   return offerType;
 };
 
+// функция создания случайного элемента массива и его укорачивания
+var getPhotosArray = function (array) {
+  var newArray = array;
+  for (var i = newArray.length; i > 0; i--) {
+    var x = getRandomArrayItem(newArray);
+    // newArray.pop(); // удаляет последний элемент массива
+    newArray.length = newArray.length - 1;
+  }
+  return x; // я вижу, что эта функция будет удалять с каждым циклом, но мне надо
+  // чтобы она получала значение и сохраняла его, потом уменьшала массив и снова получала значение.. что не так здесь?
+};
+
+// функция создания массива аватара автора объявления
+var setAvatar = function (number) {
+  var avatars = [];
+  for (var i = 1; i <= number; i++) {
+    var avatar = 'img/avatars/user' + '0' + i + '.png';
+    avatars.push(avatar);
+  }
+  return avatars;
+};
+
 
 // функция создания одного объекта - объявления(массив)
 var generateOneAdvert = function () {
   var advert = {
     author: {
-      avatar: 'img/avatars/user' + '0' + getRandomNumber(1, 8) + '.png'
+      avatar: getPhotosArray(setAvatar(8))
     },
     offer: {
       title: getRandomArrayItem(OFFER_TITLES),
@@ -111,7 +152,7 @@ var generateOneAdvert = function () {
       guests: getRandomNumber(1, 6),
       checkin: getRandomArrayItem(OFFER_CHECKIN),
       checkout: getRandomArrayItem(OFFER_CHECKOUT),
-      features: getFeaturesArray(OFFER_FEATURES),
+      features: trimToRandomArrayLength(OFFER_FEATURES),
       description: ' ',
       photos: OFFER_PHOTOS
     },
@@ -144,10 +185,12 @@ var renderMapPin = function (advert) {
   return mapPinElement;
 };
 
+var mapPinsFragment = generateAllAdverts(ADVERT_NUMBER);
+
 // функция создания меток
-var renderMapPinsFragment = function (number) {
+var renderMapPinsFragment = function () {
   var fragment = document.createDocumentFragment();
-  var adverts = generateAllAdverts(number);
+  var adverts = mapPinsFragment;
   for (var i = 0; i < adverts.length; i++) {
     fragment.appendChild(renderMapPin(adverts[i]));
   }
@@ -156,7 +199,7 @@ var renderMapPinsFragment = function (number) {
 
 // функция отрисовки меток
 var drawMapsPin = function () {
-  pinsArea.appendChild(renderMapPinsFragment(ADVERT_NUMBER));
+  pinsArea.appendChild(renderMapPinsFragment());
 };
 
 drawMapsPin();
@@ -167,15 +210,17 @@ var renderCards = function (advert) {
   var cardElement = mapCardTemplate.cloneNode(true);
   cardElement.querySelector('.popup__title').textContent = advert.offer.title;
   cardElement.querySelector('.popup__text--address').textContent = advert.offer.address;
-  cardElement.querySelector('.popup__text--price').textContent = advert.offer.price + '₽/ночь';
+  cardElement.querySelector('.popup__text--price').textContent = advert.offer.price + ' ₽/ночь';
   cardElement.querySelector('.popup__type').textContent = defineOfferType(advert);
   cardElement.querySelector('.popup__text--capacity').textContent = advert.offer.rooms + ' комнаты для '
   + advert.offer.guests + ' гостей';
   cardElement.querySelector('.popup__text--time').textContent = 'Заезд после ' + advert.offer.checkin
   + ', выезд до ' + advert.offer.checkout;
-  cardElement.querySelector('.popup__features').insertAdjacentHTML('afterbegin', getFeaturesList(advert.offer.features));
+  cardElement.querySelector('.popup__features').innerHTML = '';
+  cardElement.querySelector('.popup__features').appendChild(getFeaturesList(advert.offer.features));
   cardElement.querySelector('.popup__description').textContent = advert.offer.description;
-  cardElement.querySelector('.popup__photos').src = advert.offer.photos; // здесь будут фотки
+  cardElement.querySelector('.popup__photos').innerHTML = '';
+  cardElement.querySelector('.popup__photos').appendChild(getPhotos(advert.offer.photos));
   cardElement.querySelector('.popup__avatar').src = advert.author.avatar;
 
   return cardElement;
