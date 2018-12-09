@@ -114,17 +114,17 @@ var defineOfferType = function (advert) {
   return offerType;
 };
 
-// функция создания случайного элемента массива и его укорачивания
-var getPhotosArray = function (array) {
-  var newArray = array;
-  for (var i = newArray.length; i > 0; i--) {
-    var x = getRandomArrayItem(newArray);
-    // newArray.pop(); // удаляет последний элемент массива
-    newArray.length = newArray.length - 1;
-  }
-  return x; // я вижу, что эта функция будет удалять с каждым циклом, но мне надо
-  // чтобы она получала значение и сохраняла его, потом уменьшала массив и снова получала значение.. что не так здесь?
+
+var randomInArray = function (array) {
+  var newArray = array.slice(0);
+  return function () {
+    var index = Math.floor(Math.random() * newArray.length);
+    var item = newArray[index];
+    newArray.splice(index, 1);
+    return item;
+  };
 };
+
 
 // функция создания массива аватара автора объявления
 var setAvatar = function (number) {
@@ -136,12 +136,15 @@ var setAvatar = function (number) {
   return avatars;
 };
 
+// рандомный неповторяющийся элемент массива
+var randomArrayItem = randomInArray(setAvatar(8));
+
 
 // функция создания одного объекта - объявления(массив)
 var generateOneAdvert = function () {
   var advert = {
     author: {
-      avatar: getPhotosArray(setAvatar(8))
+      avatar: randomArrayItem()
     },
     offer: {
       title: getRandomArrayItem(OFFER_TITLES),
