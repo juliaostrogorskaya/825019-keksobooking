@@ -1,6 +1,19 @@
 'use strict';
 
-var ADVERT_NUMBER = 8;
+var ADVERTS_NUMBER = 8;
+var AUTHOR_AVATARS = generateAvatarLinks(ADVERTS_NUMBER);
+var MIN_PRICE = 1000;
+var MAX_PRICE = 1000000;
+var MIN_ROOMS = 1;
+var MAX_ROOMS = 5;
+var MIN_GUESTS = 1;
+var MAX_GUESTS = 3;
+var MIN_X = 0;
+var MAX_X = 1200;
+var MIN_Y = 130;
+var MAX_Y = 630;
+var PIN_SIZE_X = 50;
+var PIN_SIZE_Y = 70;
 var ADVERT_TITLE = 'заголовок объявления';
 var OFFER_TITLES = [
   'Большая уютная квартира',
@@ -48,31 +61,108 @@ var OFFER_PHOTOS = [
 ];
 
 var map = document.querySelector('.map');
-var pinsArea = document.querySelector('.map__pins');
+var pinsArea = map.querySelector('.map__pins');
 var mapPinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
 var mapCardTemplate = document.querySelector('#card').content.querySelector('.map__card');
 var mapContainer = map.querySelector('.map__filters-container');
 
+/**
+   * Выбирает рандомный элемент массива
 
-// рандомный элемент массива
+   * @param {array} array Массив.
+   * @return {string}  randomArrayItem Рандомный элемент в массиве.
+   */
 var getRandomArrayItem = function (array) {
   var randomArrayItem = array[Math.floor(Math.random() * array.length)];
   return randomArrayItem;
 };
 
-// рандомное число из заданных
+/**
+   * Выбирает рандомное число из заданного промежутка чисел
+
+   * @param {number} min Минимальное число.
+   * @param {number} max Максимальное число.
+   * @return {number} randomNumber Рандомное число.
+   */
 var getRandomNumber = function (min, max) {
   var randomNumber = Math.floor(Math.random() * (max - min)) + min;
   return randomNumber;
 };
 
-// функция создания массива рандомной длины - features
+/**
+   * Создает массив рандомной длины
+
+   * @param {array} array Массив.
+   * @return {array}  array Новый массив рандомной длины.
+   */
 var trimToRandomArrayLength = function (array) {
   var randomNum = getRandomNumber(1, array.length + 1);
-  return array.slice(0, randomNum); // возвращает новый массив
+  return array.slice(0, randomNum);
 };
 
-// функция создания списка - features
+/**
+   * Создает массив строк с адресами изображений аватаров
+
+   * @param {number} num Длина массива.
+   * @return {array} links Итоговый массив.
+   */
+function generateAvatarLinks(num) {
+  var links = [];
+
+  for (var i = 1; i <= num; i++) {
+    var link = 'img/avatars/user' + leadingZeroes(i, 2) + '.png';
+    links.push(link);
+  }
+
+  return links;
+}
+
+/**
+   * Добавляет 0 перед числом меньше заданной длины
+
+   * @param {number} number Число, перед которым нужно добавить 0.
+   * @param {number} length Минимальная длина строки, включая ведущие нули.
+   * @return {string} str Итоговая строка.
+   */
+function leadingZeroes(number, length) {
+  var str = '' + number;
+
+  while (str.length < length) {
+    str = '0' + str;
+  }
+
+  return str;
+}
+
+/**
+   * Перемешивает элементы массива в случайном порядке
+   *
+   * @param {array} array Массив, который нужно перемешать.
+   * @return {array} array Итоговый массив.
+   */
+function shuffleArray(array) {
+  var currentIndex = array.length;
+  var temporaryValue;
+  var randomIndex;
+
+  while (currentIndex !== 0) {
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex -= 1;
+
+    temporaryValue = array[currentIndex];
+    array[currentIndex] = array[randomIndex];
+    array[randomIndex] = temporaryValue;
+  }
+
+  return array;
+}
+
+/**
+   * Создает список преимуществ.
+   *
+   * @param {array} features Массив преимуществ.
+   * @return {object} list Список преимуществ.
+   */
 var getFeaturesList = function (features) {
   var list = document.createDocumentFragment();
   for (var i = 0; i < features.length; i++) {
@@ -84,7 +174,12 @@ var getFeaturesList = function (features) {
   return list;
 };
 
-// функция создания фото жилья
+/**
+   * Создает фото жилья.
+   *
+   * @param {array} photos Массив фото жилья.
+   * @return {object} photosContainer Фото.
+   */
 var getPhotos = function (photos) {
   var photosContainer = document.createDocumentFragment();
   for (var i = 0; i < photos.length; i++) {
@@ -99,7 +194,12 @@ var getPhotos = function (photos) {
   return photosContainer;
 };
 
-// функция определния типа жилья
+/**
+   * Определяет тип жилья
+   *
+   * @param {array} advert Массив объявлений.
+   * @return {string} offerType Тип жилья.
+   */
 var defineOfferType = function (advert) {
   var offerType = '';
   if (advert.offer.type === 'flat') {
@@ -114,99 +214,92 @@ var defineOfferType = function (advert) {
   return offerType;
 };
 
-
-var randomInArray = function (array) {
-  var newArray = array.slice(0);
-  return function () {
-    var index = Math.floor(Math.random() * newArray.length);
-    var item = newArray[index];
-    newArray.splice(index, 1);
-    return item;
-  };
-};
-
-
-// функция создания массива аватара автора объявления
-var setAvatar = function (number) {
-  var avatars = [];
-  for (var i = 1; i <= number; i++) {
-    var avatar = 'img/avatars/user' + '0' + i + '.png';
-    avatars.push(avatar);
-  }
-  return avatars;
-};
-
-// рандомный неповторяющийся элемент массива
-var randomArrayItem = randomInArray(setAvatar(8));
-
-
 // функция создания одного объекта - объявления(массив)
-var generateOneAdvert = function () {
+var generateOneAdvert = function (options) {
+  var locationX = getRandomNumber(options.locationXMin, options.locationXMax);
+  var locationY = getRandomNumber(options.locationYMin, options.locationYMax);
+
   var advert = {
     author: {
-      avatar: randomArrayItem()
+      avatar: getRandomArrayItem(options.avatars)
     },
     offer: {
-      title: getRandomArrayItem(OFFER_TITLES),
-      address: getRandomNumber(0, 1200) + ', ' + getRandomNumber(130, 630),
-      price: getRandomNumber(1000, 1000000),
-      type: getRandomArrayItem(OFFER_TYPES),
-      rooms: getRandomNumber(1, 5),
-      guests: getRandomNumber(1, 6),
-      checkin: getRandomArrayItem(OFFER_CHECKIN),
-      checkout: getRandomArrayItem(OFFER_CHECKOUT),
-      features: trimToRandomArrayLength(OFFER_FEATURES),
+      title: getRandomArrayItem(options.offerTitles),
+      address: locationX + ', ' + locationY,
+      price: getRandomNumber(options.priceMin, options.priceMax),
+      type: getRandomArrayItem(options.offerTypes),
+      rooms: getRandomNumber(options.roomsMin, options.roomsMax),
+      guests: getRandomNumber(options.guestsMin, options.guestsMax),
+      checkin: getRandomArrayItem(options.offerChekins),
+      checkout: getRandomArrayItem(options.offercheckouts),
+      features: trimToRandomArrayLength(options.offerFeatures),
       description: ' ',
-      photos: OFFER_PHOTOS
+      photos: shuffleArray(options.offerPhotos).slice() // Копируем перемешанный массив
     },
     location: {
-      locationX: getRandomNumber(0, 1200),
-      locationY: getRandomNumber(130, 630)
+      x: locationX,
+      y: locationY
     }
   };
   return advert;
 };
 
 
-// функция создания массива объектов - объявлений
-var generateAllAdverts = function (number) {
+/** Создает массив с объявлениями
+
+  * @param {number} number Длина массива.
+  * @param {array} options Массив данных.
+  * @return {array} advers Итоговый массив.
+  */
+var generateAllAdverts = function (number, options) {
   var adverts = [];
   for (var i = 0; i < number; i++) {
-    var advert = generateOneAdvert();
+    var advert = generateOneAdvert(options);
     adverts.push(advert);
+    console.log(advert);
   }
   return adverts;
 };
 
-// функция создания одной метки на карте
+/**
+   * Создает метку на карте
+
+   * @param {array} advert Рандомное объявление.
+   * @return {object} mapPinElement Метка.
+   */
 var renderMapPin = function (advert) {
   var mapPinElement = mapPinTemplate.cloneNode(true);
-  mapPinElement.style.left = advert.location.locationX + 'px';
-  mapPinElement.style.top = advert.location.locationY + 'px';
+  mapPinElement.style.left = advert.location.x - PIN_SIZE_X / 2 + 'px';
+  mapPinElement.style.top = advert.location.y - PIN_SIZE_Y / 2 + 'px';
   mapPinElement.querySelector('img').src = advert.author.avatar;
   mapPinElement.querySelector('img').alt = ADVERT_TITLE;
   return mapPinElement;
 };
 
-var mapPinsFragment = generateAllAdverts(ADVERT_NUMBER);
 
-// функция создания меток
-var renderMapPinsFragment = function () {
+/**
+   * Создает метки.
+   * @param {array} adverts Массив объявлений.
+   * @return {object} fragment Метки.
+   */
+var renderMapPinsFragment = function (adverts) {
   var fragment = document.createDocumentFragment();
-  var adverts = mapPinsFragment;
   for (var i = 0; i < adverts.length; i++) {
     fragment.appendChild(renderMapPin(adverts[i]));
   }
   return fragment;
 };
 
-// функция отрисовки меток
-var drawMapsPin = function () {
-  pinsArea.appendChild(renderMapPinsFragment());
+
+/**
+   * Отрисовывает метки.
+   * @param {array} adverts Массив объявлений.
+   */
+var drawMapsPin = function (adverts) {
+  var pinsFragment = renderMapPinsFragment(adverts);
+  pinsArea.appendChild(pinsFragment);
 };
 
-drawMapsPin();
-map.classList.remove('map--faded');
 
 // функция создания объявления
 var renderCards = function (advert) {
@@ -229,4 +322,30 @@ var renderCards = function (advert) {
   return cardElement;
 };
 
-map.insertBefore(renderCards(generateAllAdverts(8)[0]), mapContainer);
+
+var generateOptions = {
+  avatars: AUTHOR_AVATARS,
+  offerTitles: OFFER_TITLES,
+  offerTypes: OFFER_TYPES,
+  offerChekins: OFFER_CHECKIN,
+  offercheckouts: OFFER_CHECKOUT,
+  offerFeatures: OFFER_FEATURES,
+  offerPhotos: OFFER_PHOTOS,
+
+  priceMin: MIN_PRICE,
+  priceMax: MAX_PRICE,
+  roomsMin: MIN_ROOMS,
+  roomsMax: MAX_ROOMS,
+  guestsMin: MIN_GUESTS,
+  guestsMax: MAX_GUESTS,
+  locationXMin: MIN_X,
+  locationXMax: MAX_X,
+  locationYMin: MIN_Y,
+  locationYMax: MAX_Y
+};
+
+// var randomAdvert = generateOneAdvert(generateOptions);
+var advertisement = generateAllAdverts(ADVERTS_NUMBER, generateOptions);
+drawMapsPin(advertisement);
+map.insertBefore(renderCards(advertisement[0]), mapContainer);
+map.classList.remove('map--faded');
