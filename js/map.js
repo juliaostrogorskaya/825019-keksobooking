@@ -55,9 +55,9 @@ var OFFER_FEATURES = [
 ];
 
 var OFFER_PHOTOS = [
-  'http://o0.github.io/assets/images/tokyo/hotel1.jpg',
-  'http://o0.github.io/assets/images/tokyo/hotel2.jpg',
-  'http://o0.github.io/assets/images/tokyo/hotel3.jpg'
+  'https://o0.github.io/assets/images/tokyo/hotel1.jpg',
+  'https://o0.github.io/assets/images/tokyo/hotel2.jpg',
+  'https://o0.github.io/assets/images/tokyo/hotel3.jpg'
 ];
 
 var map = document.querySelector('.map');
@@ -66,16 +66,6 @@ var mapPinTemplate = document.querySelector('#pin').content.querySelector('.map_
 var mapCardTemplate = document.querySelector('#card').content.querySelector('.map__card');
 var mapContainer = map.querySelector('.map__filters-container');
 
-/**
-   * Выбирает рандомный элемент массива
-
-   * @param {array} array Массив.
-   * @return {string}  randomArrayItem Рандомный элемент в массиве.
-   */
-var getRandomArrayItem = function (array) {
-  var randomArrayItem = array[Math.floor(Math.random() * array.length)];
-  return randomArrayItem;
-};
 
 /**
    * Выбирает рандомное число из заданного промежутка чисел
@@ -157,6 +147,10 @@ function shuffleArray(array) {
   return array;
 }
 
+var getUniqueArrayItem = function (array) {
+  var removedEl = array.splice(getRandomNumber(0, array.length - 1), 1);
+  return removedEl[0];
+};
 /**
    * Создает список преимуществ.
    *
@@ -221,17 +215,17 @@ var generateOneAdvert = function (options) {
 
   var advert = {
     author: {
-      avatar: getRandomArrayItem(options.avatars)
+      avatar: getUniqueArrayItem(options.avatars)
     },
     offer: {
-      title: getRandomArrayItem(options.offerTitles),
+      title: getUniqueArrayItem(options.offerTitles),
       address: locationX + ', ' + locationY,
       price: getRandomNumber(options.priceMin, options.priceMax),
-      type: getRandomArrayItem(options.offerTypes),
+      type: options.offerTypes[getRandomNumber(0, options.offerTypes.length - 1)],
       rooms: getRandomNumber(options.roomsMin, options.roomsMax),
       guests: getRandomNumber(options.guestsMin, options.guestsMax),
-      checkin: getRandomArrayItem(options.offerChekins),
-      checkout: getRandomArrayItem(options.offercheckouts),
+      checkin: options.offerChekins[getRandomNumber(0, options.offerChekins.length - 1)],
+      checkout: options.offercheckouts[getRandomNumber(0, options.offercheckouts.length - 1)],
       features: trimToRandomArrayLength(options.offerFeatures),
       description: ' ',
       photos: shuffleArray(options.offerPhotos).slice() // Копируем перемешанный массив
@@ -256,7 +250,6 @@ var generateAllAdverts = function (number, options) {
   for (var i = 0; i < number; i++) {
     var advert = generateOneAdvert(options);
     adverts.push(advert);
-    console.log(advert);
   }
   return adverts;
 };
@@ -324,8 +317,8 @@ var renderCards = function (advert) {
 
 
 var generateOptions = {
-  avatars: AUTHOR_AVATARS,
-  offerTitles: OFFER_TITLES,
+  avatars: AUTHOR_AVATARS.slice(),
+  offerTitles: OFFER_TITLES.slice(),
   offerTypes: OFFER_TYPES,
   offerChekins: OFFER_CHECKIN,
   offercheckouts: OFFER_CHECKOUT,
