@@ -60,11 +60,19 @@ var OFFER_PHOTOS = [
   'https://o0.github.io/assets/images/tokyo/hotel3.jpg'
 ];
 
+var ESC_KEYCODE = 27;
+var ENTER_KEYCODE = 13;
 var map = document.querySelector('.map');
 var pinsArea = map.querySelector('.map__pins');
 var mapPinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
 var mapCardTemplate = document.querySelector('#card').content.querySelector('.map__card');
 var mapContainer = map.querySelector('.map__filters-container');
+var mapPinMain = map.querySelector('.map__pin--main');
+var notice = document.querySelector('.notice');
+var form = notice.querySelector('.ad-form');
+var fieldsets = form.getElementsByTagName('fieldset');
+var address = document.getElementById('address');
+var advertClose = document.querySelector('.popup__close');
 
 
 /**
@@ -337,8 +345,59 @@ var generateOptions = {
   locationYMax: MAX_Y
 };
 
-// var randomAdvert = generateOneAdvert(generateOptions);
 var advertisement = generateAllAdverts(ADVERTS_NUMBER, generateOptions);
-drawMapsPin(advertisement);
-map.insertBefore(renderCards(advertisement[0]), mapContainer);
-map.classList.remove('map--faded');
+
+//
+var disableElements = function () {
+  form.classList.add('ad-form--disabled');
+  for (var i = 0; i < fieldsets.length; i++) {
+    fieldsets[i].setAttribute('disabled', 'disabled');
+  }
+};
+disableElements();
+
+var enableElements = function () {
+  map.classList.remove('map--faded');
+  form.classList.remove('ad-form--disabled');
+  for (var i = 0; i < fieldsets.length; i++) {
+    fieldsets[i].removeAttribute('disabled');
+  }
+};
+/**
+   * Отрисовывает объявление по нажатию на метку на карте.
+   * @param {object} pin Метка.
+   * @param {array} advert Объявление.
+   */
+var showAdvert = function (pin, advert) {
+  pin.addEventListener('click', function () {
+    map.insertBefore(renderCards(advert), mapContainer);
+  });
+};
+
+var makeMapActive = function () {
+  mapPinMain.addEventListener('mouseup', function () {
+    map.classList.remove('map--faded');
+    enableElements();
+    drawMapsPin(advertisement);
+    var pins = document.querySelectorAll('.map__pin:not(.map__pin--main)');
+    for (var i = 0; i < pins.length; i++) {
+      showAdvert(pins[i], advertisement[i]);
+    }
+  });
+};
+makeMapActive();
+
+var mapPinMainWidth = 62;
+var mapPinMainHeight = 84;
+var mapPinMainPositionX = parseInt(mapPinMain.style.left, 10) + mapPinMainWidth / 2;
+var mapPinMainPositionY = parseInt(mapPinMain.style.top, 10) + mapPinMainHeight / 2;
+address.value = mapPinMainPositionX + ',' + mapPinMainPositionY;
+
+var closeAdvert = function () {
+  var advert = map.querySelector('.map__card');
+  advertClose.addEventListener('click', function () {
+    advert.remove();
+  });
+};
+
+closeAdvert();
