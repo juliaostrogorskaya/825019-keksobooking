@@ -63,7 +63,6 @@ var OFFER_PHOTOS = [
 ];
 
 var ESC_KEYCODE = 27;
-var ENTER_KEYCODE = 13;
 var map = document.querySelector('.map');
 var pinsArea = map.querySelector('.map__pins');
 var mapPinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
@@ -277,6 +276,9 @@ var renderMapPin = function (advert) {
   mapPinElement.style.top = advert.location.y - PIN_SIZE_Y / 2 + 'px';
   mapPinElement.querySelector('img').src = advert.author.avatar;
   mapPinElement.querySelector('img').alt = ADVERT_TITLE;
+  mapPinElement.addEventListener('click', function () {
+    map.insertBefore(renderCards(advert), mapContainer);
+  });
   return mapPinElement;
 };
 
@@ -322,6 +324,11 @@ var renderCards = function (advert) {
   cardElement.querySelector('.popup__photos').innerHTML = '';
   cardElement.querySelector('.popup__photos').appendChild(getPhotos(advert.offer.photos));
   cardElement.querySelector('.popup__avatar').src = advert.author.avatar;
+
+  var advertClose = cardElement.querySelector('.popup__close');
+  advertClose.addEventListener('click', function () {
+    advert.remove();
+  });
 
   return cardElement;
 };
@@ -371,29 +378,29 @@ var enableElements = function () {
    * @param {object} pin Метка.
    * @param {array} advert Объявление.
    */
-var showAdvert = function (pin, advert) {
+/* var showAdvert = function (pin, advert) {
   pin.addEventListener('click', function () {
     map.insertBefore(renderCards(advert), mapContainer);
   });
-};
+};*/
 
 var makeMapActive = function () {
   enableElements();
   drawMapsPin(advertisement);
-  var pins = document.querySelectorAll('.map__pin:not(.map__pin--main)');
-  for (var i = 0; i < pins.length; i++) {
-    showAdvert(pins[i], advertisement[i]);
-  }
+  // var pins = document.querySelectorAll('.map__pin:not(.map__pin--main)');
+  // for (var i = 0; i < pins.length; i++) {
+// showAdvert(pins[i], advertisement[i]);
+  // }
 };
 
 mapPinMain.addEventListener('mouseup', makeMapActive);
 
 var setAddress = function () {
-  var mapPinMainPositionX = parseInt(mapPinMain.style.left, 10) + MAP_PIN_MAIN_WIDTH / 2;
+  var mapPinMainPositionX = Math.round(parseInt(mapPinMain.style.left, 10) + MAP_PIN_MAIN_WIDTH / 2);
   if (map.classList.contains('map--faded')) {
-    var mapPinMainPositionY = parseInt(mapPinMain.style.top, 10) + MAP_PIN_MAIN_HEIGHT / 2;
+    var mapPinMainPositionY = Math.round(parseInt(mapPinMain.style.top, 10) + MAP_PIN_MAIN_HEIGHT / 2);
   } else {
-    mapPinMainPositionY = parseInt(mapPinMain.style.top, 10) + MAP_PIN_MAIN_HEIGHT;
+    mapPinMainPositionY = Math.round(parseInt(mapPinMain.style.top, 10) + MAP_PIN_MAIN_HEIGHT);
   }
   address.value = mapPinMainPositionX + ',' + mapPinMainPositionY;
 };
@@ -406,25 +413,24 @@ document.addEventListener('keydown', function (evt) {
   }
 });
 
+price.addEventListener('change', function () {
+  if (Number(price.value) >= 0 && Number(price.value) < 1000) {
+    typeOfFlat.value = 'bungalo';
+  } else if (Number(price.value) >= 1000 && Number(price.value) < 5000) {
+    typeOfFlat.value = 'flat';
+  } else if (Number(price.value) >= 5000 && Number(price.value) < 10000) {
+    typeOfFlat.value = 'house';
+  } else if (Number(price.value) >= 10000) {
+    typeOfFlat.value = 'palace';
+  }
+});
+
 /* var closeAdvert = function () {
   var advert = map.querySelector('.map__card');
   var advertClose = document.querySelector('.popup__close');
-  advertClose.addEventListener('click', function (evt) {
-    evt.preventDefault();
-    if (advert !== null) {
-      advert.remove();
-    }
+  advertClose.addEventListener('click', function () {
+    advert.remove();
   });
 };
 
-closeAdvert(); */
-
-if (price.value >= 0 || price.value < 1000) {
-  typeOfFlat.value = 'bungalo';
-} else if (price.value >= 1000 || price.value < 5000) {
-  typeOfFlat.value = 'flat';
-} else if (price.value >= 5000 || price.value < 10000) {
-  typeOfFlat.value = 'house';
-} else if (price.value >= 10000) {
-  typeOfFlat.value = 'palace';
-}
+closeAdvert();*/
