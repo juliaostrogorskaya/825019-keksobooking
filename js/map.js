@@ -12,6 +12,8 @@ var MIN_X = 0;
 var MAX_X = 1200;
 var MIN_Y = 130;
 var MAX_Y = 630;
+var MAP_PIN_MAIN_WIDTH = 62;
+var MAP_PIN_MAIN_HEIGHT = 84;
 var PIN_SIZE_X = 50;
 var PIN_SIZE_Y = 70;
 var ADVERT_TITLE = 'заголовок объявления';
@@ -72,7 +74,8 @@ var notice = document.querySelector('.notice');
 var form = notice.querySelector('.ad-form');
 var fieldsets = form.getElementsByTagName('fieldset');
 var address = document.getElementById('address');
-var advertClose = document.querySelector('.popup__close');
+var typeOfFlat = document.getElementById('type');
+var price = document.getElementById('price');
 
 
 /**
@@ -375,29 +378,53 @@ var showAdvert = function (pin, advert) {
 };
 
 var makeMapActive = function () {
-  mapPinMain.addEventListener('mouseup', function () {
-    map.classList.remove('map--faded');
-    enableElements();
-    drawMapsPin(advertisement);
-    var pins = document.querySelectorAll('.map__pin:not(.map__pin--main)');
-    for (var i = 0; i < pins.length; i++) {
-      showAdvert(pins[i], advertisement[i]);
+  enableElements();
+  drawMapsPin(advertisement);
+  var pins = document.querySelectorAll('.map__pin:not(.map__pin--main)');
+  for (var i = 0; i < pins.length; i++) {
+    showAdvert(pins[i], advertisement[i]);
+  }
+};
+
+mapPinMain.addEventListener('mouseup', makeMapActive);
+
+var setAddress = function () {
+  var mapPinMainPositionX = parseInt(mapPinMain.style.left, 10) + MAP_PIN_MAIN_WIDTH / 2;
+  if (map.classList.contains('map--faded')) {
+    var mapPinMainPositionY = parseInt(mapPinMain.style.top, 10) + MAP_PIN_MAIN_HEIGHT / 2;
+  } else {
+    mapPinMainPositionY = parseInt(mapPinMain.style.top, 10) + MAP_PIN_MAIN_HEIGHT;
+  }
+  address.value = mapPinMainPositionX + ',' + mapPinMainPositionY;
+};
+setAddress();
+
+document.addEventListener('keydown', function (evt) {
+  var advert = map.querySelector('.map__card');
+  if (evt.keyCode === ESC_KEYCODE && advert) {
+    advert.remove();
+  }
+});
+
+/* var closeAdvert = function () {
+  var advert = map.querySelector('.map__card');
+  var advertClose = document.querySelector('.popup__close');
+  advertClose.addEventListener('click', function (evt) {
+    evt.preventDefault();
+    if (advert !== null) {
+      advert.remove();
     }
   });
 };
-makeMapActive();
 
-var mapPinMainWidth = 62;
-var mapPinMainHeight = 84;
-var mapPinMainPositionX = parseInt(mapPinMain.style.left, 10) + mapPinMainWidth / 2;
-var mapPinMainPositionY = parseInt(mapPinMain.style.top, 10) + mapPinMainHeight / 2;
-address.value = mapPinMainPositionX + ',' + mapPinMainPositionY;
+closeAdvert(); */
 
-var closeAdvert = function () {
-  var advert = map.querySelector('.map__card');
-  advertClose.addEventListener('click', function () {
-    advert.remove();
-  });
-};
-
-closeAdvert();
+if (price.value >= 0 || price.value < 1000) {
+  typeOfFlat.value = 'bungalo';
+} else if (price.value >= 1000 || price.value < 5000) {
+  typeOfFlat.value = 'flat';
+} else if (price.value >= 5000 || price.value < 10000) {
+  typeOfFlat.value = 'house';
+} else if (price.value >= 10000) {
+  typeOfFlat.value = 'palace';
+}
