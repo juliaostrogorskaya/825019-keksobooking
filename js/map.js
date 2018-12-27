@@ -71,6 +71,7 @@ var mapContainer = map.querySelector('.map__filters-container');
 var mapPinMain = map.querySelector('.map__pin--main');
 var notice = document.querySelector('.notice');
 var form = notice.querySelector('.ad-form');
+var resetButton = form.querySelector('.ad-form__reset');
 var fieldsets = form.getElementsByTagName('fieldset');
 var address = document.getElementById('address');
 var typeOfFlat = document.getElementById('type');
@@ -414,6 +415,11 @@ price.addEventListener('change', function () {
   }
 });
 
+guestNumber.options[0].setAttribute('disabled', 'disabled');
+guestNumber.options[1].setAttribute('disabled', 'disabled');
+guestNumber.options[3].setAttribute('disabled', 'disabled');
+
+
 roomNumber.addEventListener('change', function () {
   for (var i = 0; i < guestNumber.options.length; i++) {
     guestNumber.options[i].setAttribute('disabled', 'disabled');
@@ -431,3 +437,25 @@ roomNumber.addEventListener('change', function () {
     guestNumber.options[3].disabled = false;
   }
 });
+
+
+var resetButtonClickHandler = function (evt) {
+  evt.preventDefault();
+  disableElements();
+
+  map.classList.add('map--faded');
+
+  var pinList = document.querySelectorAll('.map__pin');
+  for (var i = 1; i < pinList.length; i++) {
+    pinList[i].remove();
+  }
+
+  var advertElements = document.querySelector('.map__card');
+  if (advertElements) {
+    advertElements.remove();
+  }
+  form.reset();
+  setAddress();
+};
+
+resetButton.addEventListener('click', resetButtonClickHandler);
