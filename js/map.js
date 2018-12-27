@@ -75,6 +75,8 @@ var fieldsets = form.getElementsByTagName('fieldset');
 var address = document.getElementById('address');
 var typeOfFlat = document.getElementById('type');
 var price = document.getElementById('price');
+var roomNumber = document.getElementById('room_number');
+var guestNumber = document.getElementById('capacity');
 
 
 /**
@@ -412,12 +414,20 @@ price.addEventListener('change', function () {
   }
 });
 
-/* var closeAdvert = function () {
-  var advert = map.querySelector('.map__card');
-  var advertClose = document.querySelector('.popup__close');
-  advertClose.addEventListener('click', function () {
-    advert.remove();
-  });
-};
-
-closeAdvert();*/
+roomNumber.addEventListener('change', function () {
+  for (var i = 0; i < guestNumber.options.length; i++) {
+    guestNumber.options[i].setAttribute('disabled', 'disabled');
+  }
+  if (Number(roomNumber.value) === 1) {
+    guestNumber.options[2].disabled = false;
+  } else if (Number(roomNumber.value) === 2) {
+    guestNumber.options[1].disabled = false;
+    guestNumber.options[2].disabled = false;
+  } else if (Number(roomNumber.value) === 3) {
+    guestNumber.options[0].disabled = false;
+    guestNumber.options[1].disabled = false;
+    guestNumber.options[2].disabled = false;
+  } else if (Number(roomNumber.value) === 100) {
+    guestNumber.options[3].disabled = false;
+  }
+});
