@@ -327,7 +327,7 @@ var renderCards = function (advert) {
 
   var advertClose = cardElement.querySelector('.popup__close');
   advertClose.addEventListener('click', function () {
-    advert.remove();
+    cardElement.remove();
   });
 
   return cardElement;
@@ -373,24 +373,11 @@ var enableElements = function () {
     fieldsets[i].removeAttribute('disabled');
   }
 };
-/**
-   * Отрисовывает объявление по нажатию на метку на карте.
-   * @param {object} pin Метка.
-   * @param {array} advert Объявление.
-   */
-/* var showAdvert = function (pin, advert) {
-  pin.addEventListener('click', function () {
-    map.insertBefore(renderCards(advert), mapContainer);
-  });
-};*/
+
 
 var makeMapActive = function () {
   enableElements();
   drawMapsPin(advertisement);
-  // var pins = document.querySelectorAll('.map__pin:not(.map__pin--main)');
-  // for (var i = 0; i < pins.length; i++) {
-// showAdvert(pins[i], advertisement[i]);
-  // }
 };
 
 mapPinMain.addEventListener('mouseup', makeMapActive);
@@ -407,9 +394,9 @@ var setAddress = function () {
 setAddress();
 
 document.addEventListener('keydown', function (evt) {
-  var advert = map.querySelector('.map__card');
-  if (evt.keyCode === ESC_KEYCODE && advert) {
-    advert.remove();
+  var advertElement = map.querySelector('.map__card');
+  if (evt.keyCode === ESC_KEYCODE && advertElement) {
+    advertElement.remove();
   }
 });
 
