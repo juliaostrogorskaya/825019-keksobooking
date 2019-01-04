@@ -415,26 +415,27 @@ price.addEventListener('change', function () {
   }
 });
 
-guestNumber.options[0].setAttribute('disabled', 'disabled');
-guestNumber.options[1].setAttribute('disabled', 'disabled');
-guestNumber.options[3].setAttribute('disabled', 'disabled');
 
-
+guestNumber.value = '1';
 roomNumber.addEventListener('change', function () {
   for (var i = 0; i < guestNumber.options.length; i++) {
     guestNumber.options[i].setAttribute('disabled', 'disabled');
   }
   if (Number(roomNumber.value) === 1) {
     guestNumber.options[2].disabled = false;
+    guestNumber.value = '1';
   } else if (Number(roomNumber.value) === 2) {
     guestNumber.options[1].disabled = false;
     guestNumber.options[2].disabled = false;
+    guestNumber.value = '2';
   } else if (Number(roomNumber.value) === 3) {
     guestNumber.options[0].disabled = false;
     guestNumber.options[1].disabled = false;
     guestNumber.options[2].disabled = false;
+    guestNumber.value = '3';
   } else if (Number(roomNumber.value) === 100) {
     guestNumber.options[3].disabled = false;
+    guestNumber.value = '0';
   }
 });
 
