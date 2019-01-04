@@ -72,8 +72,10 @@ var mapPinMain = map.querySelector('.map__pin--main');
 var notice = document.querySelector('.notice');
 var form = notice.querySelector('.ad-form');
 var resetButton = form.querySelector('.ad-form__reset');
+var submitButton = form.querySelector('.ad-form__submit');
 var fieldsets = form.getElementsByTagName('fieldset');
 var address = document.getElementById('address');
+var title = document.getElementById('title');
 var typeOfFlat = document.getElementById('type');
 var price = document.getElementById('price');
 var roomNumber = document.getElementById('room_number');
@@ -417,6 +419,10 @@ price.addEventListener('change', function () {
 
 
 guestNumber.value = '1';
+guestNumber.options[0].setAttribute('disabled', 'disabled');
+guestNumber.options[1].setAttribute('disabled', 'disabled');
+guestNumber.options[3].setAttribute('disabled', 'disabled');
+
 roomNumber.addEventListener('change', function () {
   for (var i = 0; i < guestNumber.options.length; i++) {
     guestNumber.options[i].setAttribute('disabled', 'disabled');
@@ -439,6 +445,17 @@ roomNumber.addEventListener('change', function () {
   }
 });
 
+var checkValidity = function (element) {
+  if (!element.validity.valid) {
+    element.style.borderColor = 'red';
+    element.style.borderWidth = '5px';
+  }
+};
+
+submitButton.addEventListener('click', function () {
+  checkValidity(title);
+  checkValidity(price);
+});
 
 var resetButtonClickHandler = function (evt) {
   evt.preventDefault();
