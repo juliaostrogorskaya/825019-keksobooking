@@ -379,14 +379,16 @@ var enableElements = function () {
   }
 };
 
-
+// активация карты
 var makeMapActive = function () {
   enableElements();
   drawMapsPin(advertisement);
+  chooseCapacity();
 };
 
 mapPinMain.addEventListener('mouseup', makeMapActive);
 
+// определение адреса
 var setAddress = function () {
   var mapPinMainPositionX = Math.round(parseInt(mapPinMain.style.left, 10) + MAP_PIN_MAIN_WIDTH / 2);
   if (map.classList.contains('map--faded')) {
@@ -398,6 +400,7 @@ var setAddress = function () {
 };
 setAddress();
 
+// закрытие объявления по esc
 document.addEventListener('keydown', function (evt) {
   var advertElement = map.querySelector('.map__card');
   if (evt.keyCode === ESC_KEYCODE && advertElement) {
@@ -405,6 +408,7 @@ document.addEventListener('keydown', function (evt) {
   }
 });
 
+// выбор цены и типа жилья
 price.addEventListener('change', function () {
   if (Number(price.value) >= 0 && Number(price.value) < 1000) {
     typeOfFlat.value = 'bungalo';
@@ -417,11 +421,13 @@ price.addEventListener('change', function () {
   }
 });
 
-
-guestNumber.value = '1';
-guestNumber.options[0].setAttribute('disabled', 'disabled');
-guestNumber.options[1].setAttribute('disabled', 'disabled');
-guestNumber.options[3].setAttribute('disabled', 'disabled');
+// выбор количества гостей и комнат, по умолчанию один гость - одна комната
+var chooseCapacity = function () {
+  guestNumber.value = '1';
+  guestNumber.options[0].setAttribute('disabled', 'disabled');
+  guestNumber.options[1].setAttribute('disabled', 'disabled');
+  guestNumber.options[3].setAttribute('disabled', 'disabled');
+};
 
 roomNumber.addEventListener('change', function () {
   for (var i = 0; i < guestNumber.options.length; i++) {
@@ -445,6 +451,7 @@ roomNumber.addEventListener('change', function () {
   }
 });
 
+// проверка правильности введенных данных
 var checkValidity = function (element) {
   if (!element.validity.valid) {
     element.style.borderColor = 'red';
@@ -452,14 +459,22 @@ var checkValidity = function (element) {
   }
 };
 
+var removeValididty = function (element) {
+  element.style.borderColor = '';
+  element.style.borderWidth = '';
+};
+
 submitButton.addEventListener('click', function () {
   checkValidity(title);
   checkValidity(price);
 });
 
+// очистить форму
 var resetButtonClickHandler = function (evt) {
   evt.preventDefault();
   disableElements();
+  removeValididty(title);
+  removeValididty(price);
 
   map.classList.add('map--faded');
 
