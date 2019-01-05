@@ -410,6 +410,22 @@ mapPinMain.addEventListener('mousedown', function (evt) {
 
     mapPinMain.style.top = (mapPinMain.offsetTop - shift.y) + 'px';
     mapPinMain.style.left = (mapPinMain.offsetLeft - shift.x) + 'px';
+
+    if ((mapPinMain.offsetTop - shift.y) > MAX_Y) {
+      mapPinMain.style.top = MAX_Y + 'px';
+    }
+
+    if ((mapPinMain.offsetTop - shift.y) < MIN_Y) {
+      mapPinMain.style.top = MIN_Y + 'px';
+    }
+
+    if ((mapPinMain.offsetLeft - shift.x) > (MAX_X - MAP_PIN_MAIN_WIDTH)) {
+      mapPinMain.style.left = (MAX_X - MAP_PIN_MAIN_WIDTH) + 'px';
+    }
+
+    if ((mapPinMain.offsetLeft - shift.x) < MIN_X) {
+      mapPinMain.style.left = MIN_X + 'px';
+    }
   };
 
   var makeMapActive = function (upEvt) {
