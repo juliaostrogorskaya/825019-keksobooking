@@ -282,12 +282,20 @@ var renderMapPin = function (advert) {
   mapPinElement.querySelector('img').src = advert.author.avatar;
   mapPinElement.querySelector('img').alt = ADVERT_TITLE;
   mapPinElement.addEventListener('click', function () {
+    clearAdverts();
     map.insertBefore(renderCards(advert), mapContainer);
   });
+
   return mapPinElement;
 };
 
-
+// удаляет открытые объявления
+var clearAdverts = function () {
+  var advertElements = document.querySelector('.map__card');
+  if (advertElements) {
+    advertElements.remove();
+  }
+};
 /**
    * Создает метки.
    * @param {array} adverts Массив объявлений.
@@ -379,14 +387,6 @@ var enableElements = function () {
   }
 };
 
-/* // активация карты
-var makeMapActive = function () {
-  enableElements();
-  drawMapsPin(advertisement);
-  chooseCapacity();
-}; */
-
-// mapPinMain.addEventListener('mouseup', makeMapActive);
 
 // перемещение метки по клику
 mapPinMain.addEventListener('mousedown', function (evt) {
@@ -539,17 +539,13 @@ var resetButtonClickHandler = function (evt) {
   removeValididty(price);
   resetPinMain();
 
-  map.classList.add('map--faded');
-
   var pinList = document.querySelectorAll('.map__pin');
   for (var i = 1; i < pinList.length; i++) {
     pinList[i].remove();
   }
+  clearAdverts();
 
-  var advertElements = document.querySelector('.map__card');
-  if (advertElements) {
-    advertElements.remove();
-  }
+  map.classList.add('map--faded');
   form.reset();
   setAddress();
 };
