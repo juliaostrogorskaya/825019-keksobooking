@@ -387,6 +387,8 @@ var makeMapActive = function () {
 }; */
 
 // mapPinMain.addEventListener('mouseup', makeMapActive);
+
+// перемещение метки по клику
 mapPinMain.addEventListener('mousedown', function (evt) {
   evt.preventDefault();
 
@@ -428,10 +430,10 @@ mapPinMain.addEventListener('mousedown', function (evt) {
     }
   };
 
-  var makeMapActive = function (upEvt) {
+  var onMouseUp = function (upEvt) {
     upEvt.preventDefault();
     document.removeEventListener('mousemove', onMouseMove);
-    document.removeEventListener('mouseup', makeMapActive);
+    document.removeEventListener('mouseup', onMouseUp);
     enableElements();
     drawMapsPin(advertisement);
     chooseCapacity();
@@ -439,8 +441,14 @@ mapPinMain.addEventListener('mousedown', function (evt) {
   };
 
   document.addEventListener('mousemove', onMouseMove);
-  document.addEventListener('mouseup', makeMapActive);
+  document.addEventListener('mouseup', onMouseUp);
 });
+
+// возвращает главную метку в исходное положение
+var resetPinMain = function () {
+  mapPinMain.style.left = 570 + 'px';
+  mapPinMain.style.top = 375 + 'px';
+};
 
 // определение адреса
 var setAddress = function () {
@@ -529,6 +537,7 @@ var resetButtonClickHandler = function (evt) {
   disableElements();
   removeValididty(title);
   removeValididty(price);
+  resetPinMain();
 
   map.classList.add('map--faded');
 
