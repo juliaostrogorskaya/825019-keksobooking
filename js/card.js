@@ -1,4 +1,3 @@
-// card.js
 'use strict';
 (function () {
   var mapCardTemplate = document.querySelector('#card').content.querySelector('.map__card');
@@ -148,6 +147,7 @@
 
   window.card = {
     clearAdverts: clearAdverts,
-    renderCards: renderCards
+    renderCards: renderCards,
+    advertisement: advertisement
   };
 })();

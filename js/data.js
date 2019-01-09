@@ -1,4 +1,3 @@
-// модуль data.js
 'use strict';
 (function () {
   var ADVERTS_NUMBER = 8;
@@ -102,7 +101,6 @@
     offercheckouts: OFFER_CHECKOUT,
     offerFeatures: OFFER_FEATURES,
     offerPhotos: OFFER_PHOTOS,
-
     priceMin: MIN_PRICE,
     priceMax: MAX_PRICE,
     roomsMin: MIN_ROOMS,
@@ -114,7 +112,7 @@
     locationYMin: MIN_Y,
     locationYMax: MAX_Y
   };
-  var map = document.querySelector('.map'); // куда??
+
   window.data = {
     generateOptions: generateOptions,
     ADVERTS_NUMBER: ADVERTS_NUMBER,
@@ -122,6 +120,5 @@
     MIN_Y: MIN_Y,
     MAX_X: MAX_X,
     MAX_Y: MAX_Y,
-    map: map
   };
 })();

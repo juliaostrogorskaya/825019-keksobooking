@@ -1,12 +1,11 @@
-
-// map.js
 'use strict';
 (function () {
   var MAP_PIN_MAIN_WIDTH = 62;
   var MAP_PIN_MAIN_HEIGHT = 84;
+  var map = document.querySelector('.map');
   var fieldsets = window.form.form.getElementsByTagName('fieldset');
   var address = document.getElementById('address');
-  var mapPinMain = window.data.map.querySelector('.map__pin--main');
+  var mapPinMain = map.querySelector('.map__pin--main');
 
   var disableElements = function () {
     window.form.form.classList.add('ad-form--disabled');
@@ -17,7 +16,7 @@
   disableElements();
 
   var enableElements = function () {
-    window.data.map.classList.remove('map--faded');
+    map.classList.remove('map--faded');
     window.form.form.classList.remove('ad-form--disabled');
     for (var i = 0; i < fieldsets.length; i++) {
       fieldsets[i].removeAttribute('disabled');
@@ -54,7 +53,7 @@
         mapPinMain.style.top = window.data.MAX_Y + 'px';
       }
 
-      if ((mapPinMain.offsetTop - shift.y) < window.data.MIN_Y) {
+      if ((mapPinMain.offsetTop - shift.y) < window.data.MIN_Y - 62) {
         mapPinMain.style.top = window.data.MIN_Y + 'px';
       }
 
@@ -72,7 +71,7 @@
       document.removeEventListener('mousemove', onMouseMove);
       document.removeEventListener('mouseup', onMouseUp);
       enableElements();
-      drawMapsPin(advertisement);
+      window.pin.drawMapsPin(window.card.advertisement);
       window.form.chooseCapacity();
       setAddress();
     };
@@ -90,7 +89,7 @@
   // определение адреса
   var setAddress = function () {
     var mapPinMainPositionX = Math.round(parseInt(mapPinMain.style.left, 10) + MAP_PIN_MAIN_WIDTH / 2);
-    if (window.data.map.classList.contains('map--faded')) {
+    if (map.classList.contains('map--faded')) {
       var mapPinMainPositionY = Math.round(parseInt(mapPinMain.style.top, 10) + MAP_PIN_MAIN_HEIGHT / 2);
     } else {
       mapPinMainPositionY = Math.round(parseInt(mapPinMain.style.top, 10) + MAP_PIN_MAIN_HEIGHT);
@@ -98,4 +97,8 @@
     address.value = mapPinMainPositionX + ',' + mapPinMainPositionY;
   };
   setAddress();
+  window.map = {
+    map: map,
+    resetPinMain: resetPinMain
+  };
 })();

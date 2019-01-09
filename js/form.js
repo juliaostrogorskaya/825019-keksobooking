@@ -78,7 +78,7 @@
     disableElements();
     removeValididty(title);
     removeValididty(price);
-    resetPinMain();
+    window.map.resetPinMain();
 
     var pinList = document.querySelectorAll('.map__pin');
     for (var i = 1; i < pinList.length; i++) {

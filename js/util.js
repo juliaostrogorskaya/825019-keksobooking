@@ -1,5 +1,4 @@
 'use strict';
-// модуль util.js
 (function () {
   var ESC_KEYCODE = 27;
   /**

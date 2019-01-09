@@ -1,12 +1,11 @@
-//  модуль pin.js
 'use strict';
 (function () {
   var PIN_SIZE_X = 50;
   var PIN_SIZE_Y = 70;
   var ADVERT_TITLE = 'заголовок объявления';
-  var pinsArea = window.data.map.querySelector('.map__pins');
+  var pinsArea = window.map.map.querySelector('.map__pins');
   var mapPinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
-  var mapContainer = window.data.map.querySelector('.map__filters-container');
+  var mapContainer = window.map.map.querySelector('.map__filters-container');
   /**
      * Создает метку на карте
 
@@ -21,7 +20,7 @@
     mapPinElement.querySelector('img').alt = ADVERT_TITLE;
     mapPinElement.addEventListener('click', function () {
       window.card.clearAdverts();
-      window.data.map.insertBefore(window.card.renderCards(advert), mapContainer);
+      window.map.map.insertBefore(window.card.renderCards(advert), mapContainer);
     });
 
     return mapPinElement;
@@ -49,5 +48,9 @@
   var drawMapsPin = function (adverts) {
     var pinsFragment = renderMapPinsFragment(adverts);
     pinsArea.appendChild(pinsFragment);
+  };
+
+  window.pin = {
+    drawMapsPin: drawMapsPin
   };
 })();
