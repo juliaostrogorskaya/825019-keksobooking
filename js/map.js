@@ -6,6 +6,7 @@
   var fieldsets = window.form.form.getElementsByTagName('fieldset');
   var address = document.getElementById('address');
   var mapPinMain = map.querySelector('.map__pin--main');
+  var mapOverlay = document.querySelector('.map__overlay');
 
   var disableElements = function () {
     window.form.form.classList.add('ad-form--disabled');
@@ -49,20 +50,20 @@
       mapPinMain.style.top = (mapPinMain.offsetTop - shift.y) + 'px';
       mapPinMain.style.left = (mapPinMain.offsetLeft - shift.x) + 'px';
 
-      if ((mapPinMain.offsetTop - shift.y) > window.data.MAX_Y) {
-        mapPinMain.style.top = window.data.MAX_Y + 'px';
+      if ((mapPinMain.offsetTop - shift.y) > mapOverlay.offsetHeight - MAP_PIN_MAIN_HEIGHT) {
+        mapPinMain.style.top = mapOverlay.offsetHeight - MAP_PIN_MAIN_HEIGHT + 'px';
       }
 
-      if ((mapPinMain.offsetTop - shift.y) < window.data.MIN_Y - 62) {
-        mapPinMain.style.top = window.data.MIN_Y + 'px';
+      if ((mapPinMain.offsetTop - shift.y) < mapOverlay.offsetTop + MAP_PIN_MAIN_HEIGHT) {
+        mapPinMain.style.top = mapOverlay.offsetTop + MAP_PIN_MAIN_HEIGHT + 'px';
       }
 
-      if ((mapPinMain.offsetLeft - shift.x) > (window.data.MAX_X - MAP_PIN_MAIN_WIDTH)) {
-        mapPinMain.style.left = (window.data.MAX_X - MAP_PIN_MAIN_WIDTH) + 'px';
+      if ((mapPinMain.offsetLeft - shift.x) > (mapOverlay.offsetWidth - MAP_PIN_MAIN_WIDTH)) {
+        mapPinMain.style.left = (mapOverlay.offsetWidth - MAP_PIN_MAIN_WIDTH) + 'px';
       }
 
-      if ((mapPinMain.offsetLeft - shift.x) < window.data.MIN_X) {
-        mapPinMain.style.left = window.data.MIN_X + 'px';
+      if ((mapPinMain.offsetLeft - shift.x) < mapOverlay.offsetLeft) {
+        mapPinMain.style.left = mapOverlay.offsetLeft + 'px';
       }
     };
 
@@ -71,8 +72,8 @@
       document.removeEventListener('mousemove', onMouseMove);
       document.removeEventListener('mouseup', onMouseUp);
       enableElements();
-      window.pin.drawMapsPin(window.card.advertisement);
-      window.form.chooseCapacity();
+      window.pin.drawMapsPin(window.data.advertisement);
+      window.form.setDefaultCapacity();
       setAddress();
     };
 
@@ -99,6 +100,8 @@
   setAddress();
   window.map = {
     map: map,
-    resetPinMain: resetPinMain
+    resetPinMain: resetPinMain,
+    disableElements: disableElements,
+    setAddress: setAddress
   };
 })();

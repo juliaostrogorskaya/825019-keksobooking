@@ -113,12 +113,54 @@
     locationYMax: MAX_Y
   };
 
+  // функция создания одного объекта - объявления(массив)
+  var generateOneAdvert = function (options) {
+    var locationX = window.util.getRandomNumber(options.locationXMin, options.locationXMax);
+    var locationY = window.util.getRandomNumber(options.locationYMin, options.locationYMax);
+
+    var advert = {
+      author: {
+        avatar: window.util.getUniqueArrayItem(options.avatars)
+      },
+      offer: {
+        title: window.util.getUniqueArrayItem(options.offerTitles),
+        address: locationX + ', ' + locationY,
+        price: window.util.getRandomNumber(options.priceMin, options.priceMax),
+        type: options.offerTypes[window.util.getRandomNumber(0, options.offerTypes.length - 1)],
+        rooms: window.util.getRandomNumber(options.roomsMin, options.roomsMax),
+        guests: window.util.getRandomNumber(options.guestsMin, options.guestsMax),
+        checkin: options.offerChekins[window.util.getRandomNumber(0, options.offerChekins.length - 1)],
+        checkout: options.offercheckouts[window.util.getRandomNumber(0, options.offercheckouts.length - 1)],
+        features: window.util.trimToRandomArrayLength(options.offerFeatures),
+        description: ' ',
+        photos: window.util.shuffleArray(options.offerPhotos).slice() // Копируем перемешанный массив
+      },
+      location: {
+        x: locationX,
+        y: locationY
+      }
+    };
+    return advert;
+  };
+
+  /** Создает массив с объявлениями
+
+    * @param {number} number Длина массива.
+    * @param {array} options Массив данных.
+    * @return {array} advers Итоговый массив.
+    */
+  var generateAllAdverts = function (number, options) {
+    var adverts = [];
+    for (var i = 0; i < number; i++) {
+      var advert = generateOneAdvert(options);
+      adverts.push(advert);
+    }
+    return adverts;
+  };
+
+  var advertisement = generateAllAdverts(ADVERTS_NUMBER, generateOptions);
+
   window.data = {
-    generateOptions: generateOptions,
-    ADVERTS_NUMBER: ADVERTS_NUMBER,
-    MIN_X: MIN_X,
-    MIN_Y: MIN_Y,
-    MAX_X: MAX_X,
-    MAX_Y: MAX_Y,
+    advertisement: advertisement
   };
 })();
