@@ -10,6 +10,7 @@
   var guestNumber = document.getElementById('capacity');
   var title = document.getElementById('title');
 
+
   // выбор цены и типа жилья
   function setMinPrice(propertyType, priceInput) {
     var minPrices = {
