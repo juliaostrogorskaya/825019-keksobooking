@@ -19,7 +19,7 @@
     };
     priceInput.setAttribute('min', minPrices[propertyType] || 0);
   }
-  price.addEventListener('change', function () {
+  typeOfFlat.addEventListener('change', function () {
     setMinPrice(typeOfFlat.value, price);
   });
 
