@@ -19,7 +19,9 @@
     };
     priceInput.setAttribute('min', minPrices[propertyType] || 0);
   }
-  price.addEventListener('change', setMinPrice(typeOfFlat.value, price));
+  price.addEventListener('change', function () {
+    setMinPrice(typeOfFlat.value, price);
+  });
 
   // выбор количества гостей и комнат, по умолчанию один гость - одна комната
   var setDefaultCapacity = function () {
