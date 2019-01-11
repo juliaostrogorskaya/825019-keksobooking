@@ -9,6 +9,7 @@
   var roomNumber = document.getElementById('room_number');
   var guestNumber = document.getElementById('capacity');
   var title = document.getElementById('title');
+  var main = document.querySelector('main');
 
 
   // выбор цены и типа жилья
@@ -70,6 +71,32 @@
   submitButton.addEventListener('click', function () {
     checkValidity(title);
     checkValidity(price);
+  });
+
+  // успешная отправка данных
+  var onLoad = function () {
+    var successMessage = document.querySelector('#success').content.querySelector('.success');
+    var message = main.appendChild(successMessage.cloneNode(true));
+
+    document.addEventListener('click', function () {
+      message.remove();
+    });
+    resetButtonClickHandler();
+  };
+
+  // неуспешная отправка данных
+  var onError = function () {
+    var errorMessage = document.querySelector('#error').content.querySelector('.error');
+    var message = main.appendChild(errorMessage.cloneNode(true));
+
+    document.addEventListener('click', function () {
+      message.remove();
+    });
+  };
+
+  form.addEventListener('submit', function (evt) {
+    window.backend.upload(new FormData(form), onLoad, onError);
+    evt.preventDefault();
   });
 
   // очистить форму
