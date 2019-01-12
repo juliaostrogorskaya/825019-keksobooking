@@ -108,6 +108,8 @@
   form.addEventListener('submit', function (evt) {
     window.backend.upload(new FormData(form), onLoad, onError);
     evt.preventDefault();
+    window.map.makeMapInactive();
+    window.map.setAddress();
   });
 
   // деактивация формы
@@ -131,7 +133,7 @@
   // очистить форму
   var resetButtonClickHandler = function (evt) {
     evt.preventDefault();
-    disableFormElements();
+    window.map.makeMapInactive();
     removeValididty(title);
     removeValididty(price);
     form.reset();

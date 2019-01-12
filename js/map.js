@@ -7,6 +7,8 @@
   var mapPinMain = map.querySelector('.map__pin--main');
   var mapOverlay = document.querySelector('.map__overlay');
 
+  address.readOnly = true;
+
   // активация карты
   var makeMapActive = function () {
     map.classList.remove('map--faded');
@@ -18,7 +20,6 @@
     resetPinMain();
     clearMap();
     map.classList.add('map--faded');
-    setAddress();
   };
 
   // перемещение метки по клику
@@ -113,8 +114,10 @@
     address.value = mapPinMainPositionX + ',' + mapPinMainPositionY;
   };
   setAddress();
+
   window.map = {
     map: map,
     makeMapInactive: makeMapInactive,
+    setAddress: setAddress
   };
 })();
