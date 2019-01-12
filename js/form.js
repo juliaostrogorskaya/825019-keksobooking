@@ -2,6 +2,7 @@
 (function () {
   var notice = document.querySelector('.notice');
   var form = notice.querySelector('.ad-form');
+  var fieldsets = form.getElementsByTagName('fieldset');
   var resetButton = form.querySelector('.ad-form__reset');
   var submitButton = form.querySelector('.ad-form__submit');
   var typeOfFlat = document.getElementById('type');
@@ -99,24 +100,38 @@
     evt.preventDefault();
   });
 
+  // деактивация формы
+  var disableFormElements = function () {
+    form.classList.add('ad-form--disabled');
+    for (var i = 0; i < fieldsets.length; i++) {
+      fieldsets[i].setAttribute('disabled', 'disabled');
+    }
+    // window.map.makeMapInactive();
+  };
+  disableFormElements();
+
+  // активация формы
+  var enableFormElements = function () {
+    form.classList.remove('ad-form--disabled');
+    for (var i = 0; i < fieldsets.length; i++) {
+      fieldsets[i].removeAttribute('disabled');
+    }
+  };
+
   // очистить форму
   var resetButtonClickHandler = function (evt) {
     evt.preventDefault();
-    window.map.disableElements();
+    disableFormElements();
     removeValididty(title);
     removeValididty(price);
-    window.map.resetPinMain();
-    window.map.clearMap();
-
-    window.map.map.classList.add('map--faded');
     form.reset();
-    window.map.setAddress();
   };
 
   resetButton.addEventListener('click', resetButtonClickHandler);
 
   window.form = {
     setDefaultCapacity: setDefaultCapacity,
+    enableFormElements: enableFormElements,
     form: form
   };
 })();

@@ -3,27 +3,23 @@
   var MAP_PIN_MAIN_WIDTH = 62;
   var MAP_PIN_MAIN_HEIGHT = 84;
   var map = document.querySelector('.map');
-  var fieldsets = window.form.form.getElementsByTagName('fieldset');
   var address = document.getElementById('address');
   var mapPinMain = map.querySelector('.map__pin--main');
   var mapOverlay = document.querySelector('.map__overlay');
 
-  var disableElements = function () {
-    window.form.form.classList.add('ad-form--disabled');
-    for (var i = 0; i < fieldsets.length; i++) {
-      fieldsets[i].setAttribute('disabled', 'disabled');
-    }
-  };
-  disableElements();
-
-  var enableElements = function () {
+  // активация карты
+  var makeMapActive = function () {
     map.classList.remove('map--faded');
-    window.form.form.classList.remove('ad-form--disabled');
-    for (var i = 0; i < fieldsets.length; i++) {
-      fieldsets[i].removeAttribute('disabled');
-    }
+    window.form.enableFormElements();
   };
 
+  // деактивация карты
+  var makeMapInactive = function () {
+    resetPinMain();
+    clearMap();
+    map.classList.add('map--faded');
+    setAddress();
+  };
 
   // перемещение метки по клику
   mapPinMain.addEventListener('mousedown', function (evt) {
@@ -66,16 +62,18 @@
         mapPinMain.style.left = mapOverlay.offsetLeft + 'px';
       }
     };
+
     var onSuccess = function (data) {
       window.data.advertisement = data;
       window.pin.drawMapsPin(data);
     };
+
     var data = window.data.advertisement;
     var onMouseUp = function (upEvt) {
       upEvt.preventDefault();
       document.removeEventListener('mousemove', onMouseMove);
       document.removeEventListener('mouseup', onMouseUp);
-      enableElements();
+      makeMapActive();
       if (data.length === 0) {
         window.backend.load(onSuccess, window.form.onError);
       } else {
@@ -117,9 +115,6 @@
   setAddress();
   window.map = {
     map: map,
-    resetPinMain: resetPinMain,
-    disableElements: disableElements,
-    clearMap: clearMap,
-    setAddress: setAddress
+    makeMapInactive: makeMapInactive,
   };
 })();
