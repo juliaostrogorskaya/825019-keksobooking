@@ -62,6 +62,9 @@
       element.style.borderColor = 'red';
       element.style.borderWidth = '5px';
     }
+    element.addEventListener('change', function () {
+      removeValididty(element);
+    });
   };
 
   var removeValididty = function (element) {
