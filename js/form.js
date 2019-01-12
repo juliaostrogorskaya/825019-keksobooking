@@ -81,10 +81,7 @@
   var onLoad = function () {
     var successMessage = document.querySelector('#success').content.querySelector('.success');
     var message = main.appendChild(successMessage.cloneNode(true));
-
-    document.addEventListener('click', function () {
-      message.remove();
-    });
+    closeMessage(message);
     form.reset();
   };
 
@@ -92,9 +89,19 @@
   var onError = function () {
     var errorMessage = document.querySelector('#error').content.querySelector('.error');
     var message = main.appendChild(errorMessage.cloneNode(true));
+    closeMessage(message);
+  };
 
+  // закрытие сообщений
+  var closeMessage = function (message) {
     document.addEventListener('click', function () {
       message.remove();
+    });
+
+    document.addEventListener('keydown', function (evt) {
+      if (evt.keyCode === window.util.ESC_KEYCODE) {
+        message.remove();
+      }
     });
   };
 
