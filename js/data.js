@@ -1,6 +1,6 @@
 'use strict';
 (function () {
-  var ADVERTS_NUMBER = 8;
+/*  var ADVERTS_NUMBER = 8;
   var AUTHOR_AVATARS = generateAvatarLinks(ADVERTS_NUMBER);
   var MIN_PRICE = 1000;
   var MAX_PRICE = 1000000;
@@ -64,7 +64,7 @@
      * @param {number} num Длина массива.
      * @return {array} links Итоговый массив.
      */
-  function generateAvatarLinks(num) {
+  /* function generateAvatarLinks(num) {
     var links = [];
 
     for (var i = 1; i <= num; i++) {
@@ -82,7 +82,7 @@
      * @param {number} length Минимальная длина строки, включая ведущие нули.
      * @return {string} str Итоговая строка.
      */
-  function leadingZeroes(number, length) {
+  /* function leadingZeroes(number, length) {
     var str = '' + number;
 
     while (str.length < length) {
@@ -149,7 +149,7 @@
     * @param {array} options Массив данных.
     * @return {array} advers Итоговый массив.
     */
-  var generateAllAdverts = function (number, options) {
+  /* var generateAllAdverts = function (number, options) {
     var adverts = [];
     for (var i = 0; i < number; i++) {
       var advert = generateOneAdvert(options);
@@ -162,5 +162,9 @@
 
   window.data = {
     advertisement: advertisement
+  };*/
+
+  window.data = {
+    advertisement: []
   };
 })();

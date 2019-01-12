@@ -66,15 +66,21 @@
         mapPinMain.style.left = mapOverlay.offsetLeft + 'px';
       }
     };
-
+    var onSuccess = function (data) {
+      window.data.advertisement = data;
+      window.pin.drawMapsPin(data);
+    };
+    var data = window.data.advertisement;
     var onMouseUp = function (upEvt) {
       upEvt.preventDefault();
       document.removeEventListener('mousemove', onMouseMove);
       document.removeEventListener('mouseup', onMouseUp);
       enableElements();
-      window.backend.load(function () {
-        window.pin.drawMapsPin(window.data.advertisement);
-      });
+      if (data.length === 0) {
+        window.backend.load(onSuccess, window.form.onError);
+      } else {
+        window.pin.drawMapsPin(data);
+      }
       window.form.setDefaultCapacity();
       setAddress();
     };
