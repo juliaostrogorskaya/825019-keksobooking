@@ -40,7 +40,6 @@
     return fragment;
   };
 
-
   /**
      * Отрисовывает метки.
      * @param {array} adverts Массив объявлений.
@@ -49,6 +48,7 @@
     var pinsFragment = renderMapPinsFragment(adverts);
     pinsArea.appendChild(pinsFragment);
   };
+
 
   window.pin = {
     drawMapsPin: drawMapsPin

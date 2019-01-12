@@ -72,7 +72,9 @@
       document.removeEventListener('mousemove', onMouseMove);
       document.removeEventListener('mouseup', onMouseUp);
       enableElements();
-      window.pin.drawMapsPin(window.data.advertisement);
+      window.backend.load(function () {
+        window.pin.drawMapsPin(window.data.advertisement);
+      });
       window.form.setDefaultCapacity();
       setAddress();
     };
@@ -85,6 +87,15 @@
   var resetPinMain = function () {
     mapPinMain.style.left = 570 + 'px';
     mapPinMain.style.top = 375 + 'px';
+  };
+
+  // очищает карту
+  var clearMap = function () {
+    var pinList = document.querySelectorAll('.map__pin');
+    for (var i = 1; i < pinList.length; i++) {
+      pinList[i].remove();
+    }
+    window.card.clearAdverts();
   };
 
   // определение адреса
@@ -102,6 +113,7 @@
     map: map,
     resetPinMain: resetPinMain,
     disableElements: disableElements,
+    clearMap: clearMap,
     setAddress: setAddress
   };
 })();

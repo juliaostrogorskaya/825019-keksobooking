@@ -81,7 +81,7 @@
     document.addEventListener('click', function () {
       message.remove();
     });
-    resetButtonClickHandler();
+    form.reset();
   };
 
   // неуспешная отправка данных
@@ -106,12 +106,7 @@
     removeValididty(title);
     removeValididty(price);
     window.map.resetPinMain();
-
-    var pinList = document.querySelectorAll('.map__pin');
-    for (var i = 1; i < pinList.length; i++) {
-      pinList[i].remove();
-    }
-    window.card.clearAdverts();
+    window.map.clearMap();
 
     window.map.map.classList.add('map--faded');
     form.reset();
