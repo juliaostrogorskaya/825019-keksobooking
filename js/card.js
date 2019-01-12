@@ -62,13 +62,55 @@
     cardElement.querySelector('.popup__photos').innerHTML = '';
     cardElement.querySelector('.popup__photos').appendChild(getPhotos(advert.offer.photos));
     cardElement.querySelector('.popup__avatar').src = advert.author.avatar;
-
+    checkData(advert, cardElement);
     var advertClose = cardElement.querySelector('.popup__close');
     advertClose.addEventListener('click', function () {
       cardElement.remove();
     });
-
     return cardElement;
+  };
+
+  // проверка полученных данных и их отрисовка
+  var checkData = function (advert, element) {
+    if (!advert.offer.length) {
+      element.remove();
+    }
+
+    if (!advert.offer.title.length) {
+      element.querySelector('.popup__title').remove();
+    }
+
+    if (!advert.offer.address.length) {
+      element.querySelector('.popup__text--address').remove();
+    }
+
+    if (!advert.offer.price.length) {
+      element.querySelector('.popup__text--price').remove();
+    }
+
+    if (!advert.offer.type.length) {
+      element.querySelector('.popup__type').remove();
+    }
+
+    if (!advert.offer.rooms.length) {
+      element.querySelector('.popup__text--capacity').remove();
+    }
+
+    if (!advert.offer.checkin.length && !advert.offer.checkin.length) {
+      element.querySelector('.popup__text--time').remove();
+    }
+
+    if (!advert.offer.features.length) {
+      element.querySelector('.popup__features').remove();
+    }
+
+    if (!advert.offer.description.length) {
+      element.querySelector('.popup__description').remove();
+    }
+
+    if (!advert.offer.photos.length) {
+      element.querySelector('.popup__photos').remove();
+    }
   };
 
   // удаляет открытые объявления
