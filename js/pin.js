@@ -3,6 +3,7 @@
   var PIN_SIZE_X = 50;
   var PIN_SIZE_Y = 70;
   var ADVERT_TITLE = 'заголовок объявления';
+  var ADVERT_NUMBER = 5;
   var pinsArea = window.map.map.querySelector('.map__pins');
   var mapPinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
   var mapContainer = window.map.map.querySelector('.map__filters-container');
@@ -34,7 +35,7 @@
      */
   var renderMapPinsFragment = function (adverts) {
     var fragment = document.createDocumentFragment();
-    for (var i = 0; i < adverts.length; i++) {
+    for (var i = 0; i < ADVERT_NUMBER; i++) {
       fragment.appendChild(renderMapPin(adverts[i]));
     }
     return fragment;

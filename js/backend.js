@@ -56,6 +56,6 @@
 
   window.backend = {
     load: load,
-    upload: upload
+    upload: upload,
   };
 })();

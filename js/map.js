@@ -78,7 +78,7 @@
       if (data.length === 0) {
         window.backend.load(onSuccess, window.form.onError);
       } else {
-        window.pin.drawMapsPin(data);
+        window.pin.drawMapsPin(window.filters.filteredPins);
       }
       window.form.setDefaultCapacity();
       setAddress();
@@ -118,6 +118,7 @@
   window.map = {
     map: map,
     makeMapInactive: makeMapInactive,
-    setAddress: setAddress
+    setAddress: setAddress,
+    clearMap: clearMap
   };
 })();
