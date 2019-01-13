@@ -51,28 +51,6 @@
     }
   });
 
-  /*
-  // выбор преимуществ
-  var chooseFeatures = function (data) {
-    for (var i = 0; i < features.length; i++) {
-      if (features[i].checked && data.offer.features.indexOf(features[i].value) < 0) {
-        return false;
-      }
-    }
-    return true;
-  };
-*/
-  /* var chooseFeatures = adverts.filter(function (data) {
-    for (var i = 0; i < features.length; i++) {
-      if (features[i].checked && data.offer.features.indexOf(features[i].value) < 0) {
-        return false;
-      } else {
-        return true;
-      }
-    }
-  });
-
-*/
   filters.addEventListener('change', function () {
     window.map.clearMap();
     window.pin.drawMapsPin(filteredPins);
