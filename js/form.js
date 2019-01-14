@@ -152,6 +152,7 @@
       fieldsets[i].removeAttribute('disabled');
     }
     checkRoomsCapacity();
+    setMinPrice(typeOfFlat.value, price);
   };
 
   // деактивация формы

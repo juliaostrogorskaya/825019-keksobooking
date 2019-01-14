@@ -2,7 +2,7 @@
 (function () {
   var MAP_PIN_MAIN_WIDTH = 62;
   var MAP_PIN_MAIN_HEIGHT = 62;
-  var MAP_PIN_MAIN_TAIL = 22;
+  var MAP_PIN_MAIN_TAIL = 20;
   var filters = document.querySelector('.map__filters-container');
   var map = document.querySelector('.map');
   var address = document.getElementById('address');
@@ -13,13 +13,15 @@
 
   // активация карты
   var makeMapActive = function () {
-    map.classList.remove('map--faded');
-    window.form.enableFormElements();
-    var onSuccess = function (data) {
-      window.data.advertisement = data;
-      window.pin.drawMapsPin(data);
-    };
-    window.backend.load(onSuccess, window.form.onError);
+    if (map.classList.contains('map--faded')) {
+      map.classList.remove('map--faded');
+      window.form.enableFormElements();
+      var onSuccess = function (data) {
+        window.data.advertisement = data;
+        window.pin.drawMapsPin(data);
+      };
+      window.backend.load(onSuccess, window.form.onError);
+    }
   };
 
   // деактивация карты
