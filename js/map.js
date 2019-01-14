@@ -1,7 +1,9 @@
 'use strict';
 (function () {
   var MAP_PIN_MAIN_WIDTH = 62;
-  var MAP_PIN_MAIN_HEIGHT = 84;
+  var MAP_PIN_MAIN_HEIGHT = 62;
+  var MAP_PIN_MAIN_TAIL = 22;
+  var filters = document.querySelector('.map__filters-container');
   var map = document.querySelector('.map');
   var address = document.getElementById('address');
   var mapPinMain = map.querySelector('.map__pin--main');
@@ -52,8 +54,8 @@
       mapPinMain.style.top = (mapPinMain.offsetTop - shift.y) + 'px';
       mapPinMain.style.left = (mapPinMain.offsetLeft - shift.x) + 'px';
 
-      if ((mapPinMain.offsetTop - shift.y) > mapOverlay.offsetHeight - MAP_PIN_MAIN_HEIGHT) {
-        mapPinMain.style.top = mapOverlay.offsetHeight - MAP_PIN_MAIN_HEIGHT + 'px';
+      if ((mapPinMain.offsetTop - shift.y) > filters.offsetTop - (MAP_PIN_MAIN_HEIGHT + MAP_PIN_MAIN_TAIL)) {
+        mapPinMain.style.top = filters.offsetTop - (MAP_PIN_MAIN_HEIGHT + MAP_PIN_MAIN_TAIL) + 'px';
       }
 
       if ((mapPinMain.offsetTop - shift.y) < mapOverlay.offsetTop + MAP_PIN_MAIN_HEIGHT) {
@@ -101,9 +103,9 @@
   var setAddress = function () {
     var mapPinMainPositionX = Math.round(parseInt(mapPinMain.style.left, 10) + MAP_PIN_MAIN_WIDTH / 2);
     if (map.classList.contains('map--faded')) {
-      var mapPinMainPositionY = Math.round(parseInt(mapPinMain.style.top, 10) + MAP_PIN_MAIN_HEIGHT / 2);
+      var mapPinMainPositionY = Math.round(parseInt(mapPinMain.style.top, 10) + ((MAP_PIN_MAIN_HEIGHT + MAP_PIN_MAIN_TAIL) / 2));
     } else {
-      mapPinMainPositionY = Math.round(parseInt(mapPinMain.style.top, 10) + MAP_PIN_MAIN_HEIGHT);
+      mapPinMainPositionY = Math.round(parseInt(mapPinMain.style.top, 10) + (MAP_PIN_MAIN_HEIGHT + MAP_PIN_MAIN_TAIL));
     }
     address.value = mapPinMainPositionX + ',' + mapPinMainPositionY;
   };
