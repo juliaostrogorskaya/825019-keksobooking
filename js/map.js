@@ -13,6 +13,10 @@
   var makeMapActive = function () {
     map.classList.remove('map--faded');
     window.form.enableFormElements();
+    var onSuccess = function (data) {
+      window.pin.drawMapsPin(data);
+    };
+    window.backend.load(onSuccess, window.form.onError);
   };
 
   // деактивация карты
@@ -64,22 +68,11 @@
       }
     };
 
-    var onSuccess = function (data) {
-      window.data.advertisement = data;
-      window.pin.drawMapsPin(data);
-    };
-
-    var data = window.data.advertisement;
     var onMouseUp = function (upEvt) {
       upEvt.preventDefault();
       document.removeEventListener('mousemove', onMouseMove);
       document.removeEventListener('mouseup', onMouseUp);
       makeMapActive();
-      if (data.length === 0) {
-        window.backend.load(onSuccess, window.form.onError);
-      } else {
-        window.pin.drawMapsPin(window.filters.filteredPins);
-      }
       window.form.setDefaultCapacity();
       setAddress();
     };

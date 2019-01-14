@@ -82,7 +82,6 @@
     var successMessage = document.querySelector('#success').content.querySelector('.success');
     var message = main.appendChild(successMessage.cloneNode(true));
     closeMessage(message);
-    form.reset();
   };
 
   // неуспешная отправка данных
@@ -108,11 +107,10 @@
   form.addEventListener('submit', function (evt) {
     window.backend.upload(new FormData(form), onLoad, onError);
     evt.preventDefault();
-    window.map.makeMapInactive();
-    window.map.setAddress();
+    deactivateForm();
   });
 
-  // деактивация формы
+  // деактивация элементов формы
   var disableFormElements = function () {
     form.classList.add('ad-form--disabled');
     for (var i = 0; i < fieldsets.length; i++) {
@@ -120,7 +118,7 @@
     }
     // window.map.makeMapInactive();
   };
-  disableFormElements();
+
 
   // активация формы
   var enableFormElements = function () {
@@ -130,13 +128,19 @@
     }
   };
 
-  // очистить форму
-  var resetButtonClickHandler = function (evt) {
-    evt.preventDefault();
+  // деактивация формы
+  var deactivateForm = function () {
+    disableFormElements();
     window.map.makeMapInactive();
     removeValididty(title);
     removeValididty(price);
     form.reset();
+  };
+
+  // очистить форму
+  var resetButtonClickHandler = function (evt) {
+    evt.preventDefault();
+    deactivateForm();
   };
 
   resetButton.addEventListener('click', resetButtonClickHandler);
