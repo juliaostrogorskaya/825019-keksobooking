@@ -76,7 +76,7 @@
       document.removeEventListener('mousemove', onMouseMove);
       document.removeEventListener('mouseup', onMouseUp);
       makeMapActive();
-      window.form.setDefaultCapacity();
+      // window.form.setDefaultCapacity();
       setAddress();
     };
 

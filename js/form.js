@@ -26,15 +26,24 @@
     setMinPrice(typeOfFlat.value, price);
   });
 
+
   // выбор количества гостей и комнат, по умолчанию один гость - одна комната
-  var setDefaultCapacity = function () {
+  /* var setDefaultCapacity = function () {
     guestNumber.value = '1';
     guestNumber.options[0].setAttribute('disabled', 'disabled');
     guestNumber.options[1].setAttribute('disabled', 'disabled');
     guestNumber.options[3].setAttribute('disabled', 'disabled');
-  };
+  };*/
 
   roomNumber.addEventListener('change', function () {
+    checkRoomsCapacity();
+  });
+  guestNumber.addEventListener('change', function () {
+    checkRoomsCapacity();
+  });
+
+  // выбор количества гостей и комнат, по умолчанию один гость - одна комната
+  var checkRoomsCapacity = function () {
     for (var i = 0; i < guestNumber.options.length; i++) {
       guestNumber.options[i].setAttribute('disabled', 'disabled');
     }
@@ -70,7 +79,7 @@
         guestNumber.setCustomValidity('Выберите возможный вариант: «не для гостей»');
       }
     }
-  });
+  };
 
   // проверка правильности введенных данных
   var checkValidity = function (element) {
@@ -142,6 +151,7 @@
     for (var i = 0; i < fieldsets.length; i++) {
       fieldsets[i].removeAttribute('disabled');
     }
+    checkRoomsCapacity();
   };
 
   // деактивация формы
@@ -162,7 +172,7 @@
   resetButton.addEventListener('click', resetButtonClickHandler);
 
   window.form = {
-    setDefaultCapacity: setDefaultCapacity,
+    // setDefaultCapacity: setDefaultCapacity,
     enableFormElements: enableFormElements,
     form: form
   };
