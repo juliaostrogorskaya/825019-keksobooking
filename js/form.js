@@ -40,19 +40,35 @@
     }
     if (Number(roomNumber.value) === 1) {
       guestNumber.options[2].disabled = false;
-      guestNumber.setCustomValidity('Выберите возможный вариант: «для 1 гостя»');
+      if (Number(guestNumber.value) === 1) {
+        guestNumber.setCustomValidity('');
+      } else {
+        guestNumber.setCustomValidity('Выберите возможный вариант: «для 1 гостя»');
+      }
     } else if (Number(roomNumber.value) === 2) {
       guestNumber.options[1].disabled = false;
       guestNumber.options[2].disabled = false;
-      guestNumber.setCustomValidity('Выберите возможные варианты: «для 2 гостей» или «для 1 гостя»');
+      if (Number(guestNumber.value) === 1 || Number(guestNumber.value) === 2) {
+        guestNumber.setCustomValidity('');
+      } else {
+        guestNumber.setCustomValidity('Выберите возможные варианты: «для 2 гостей» или «для 1 гостя»');
+      }
     } else if (Number(roomNumber.value) === 3) {
       guestNumber.options[0].disabled = false;
       guestNumber.options[1].disabled = false;
       guestNumber.options[2].disabled = false;
-      guestNumber.setCustomValidity('Выберите возможные варианты: «для 3 гостей», «для 2 гостей» или «для 1 гостя»');
+      if (Number(guestNumber.value) === 1 || Number(guestNumber.value) === 2 || Number(guestNumber.value) === 3) {
+        guestNumber.setCustomValidity('');
+      } else {
+        guestNumber.setCustomValidity('Выберите возможные варианты: «для 3 гостей», «для 2 гостей» или «для 1 гостя»');
+      }
     } else if (Number(roomNumber.value) === 100) {
       guestNumber.options[3].disabled = false;
-      guestNumber.setCustomValidity('Выберите возможный вариант: «не для гостей»');
+      if (Number(guestNumber.value) === 0) {
+        guestNumber.setCustomValidity('');
+      } else {
+        guestNumber.setCustomValidity('Выберите возможный вариант: «не для гостей»');
+      }
     }
   });
 
