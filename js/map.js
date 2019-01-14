@@ -14,6 +14,7 @@
     map.classList.remove('map--faded');
     window.form.enableFormElements();
     var onSuccess = function (data) {
+      window.data.advertisement = data;
       window.pin.drawMapsPin(data);
     };
     window.backend.load(onSuccess, window.form.onError);
