@@ -27,14 +27,6 @@
   });
 
 
-  // выбор количества гостей и комнат, по умолчанию один гость - одна комната
-  /* var setDefaultCapacity = function () {
-    guestNumber.value = '1';
-    guestNumber.options[0].setAttribute('disabled', 'disabled');
-    guestNumber.options[1].setAttribute('disabled', 'disabled');
-    guestNumber.options[3].setAttribute('disabled', 'disabled');
-  };*/
-
   roomNumber.addEventListener('change', function () {
     checkRoomsCapacity();
   });
@@ -141,7 +133,7 @@
     for (var i = 0; i < fieldsets.length; i++) {
       fieldsets[i].setAttribute('disabled', 'disabled');
     }
-    // window.map.makeMapInactive();
+
   };
 
 
@@ -173,7 +165,6 @@
   resetButton.addEventListener('click', resetButtonClickHandler);
 
   window.form = {
-    // setDefaultCapacity: setDefaultCapacity,
     enableFormElements: enableFormElements,
     form: form
   };
