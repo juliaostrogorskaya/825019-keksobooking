@@ -56,8 +56,5 @@
   });
   filters.addEventListener('change', window.util.debounce(filterPins));
 
-  window.filters = {
-    // filterPins: filterPins
-  };
 
 })();
