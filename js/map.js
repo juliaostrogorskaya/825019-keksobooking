@@ -1,29 +1,35 @@
 'use strict';
 (function () {
   var MAP_PIN_MAIN_WIDTH = 62;
-  var MAP_PIN_MAIN_HEIGHT = 84;
+  var MAP_PIN_MAIN_HEIGHT = 62;
+  var MAP_PIN_MAIN_TAIL = 20;
+  var filters = document.querySelector('.map__filters-container');
   var map = document.querySelector('.map');
-  var fieldsets = window.form.form.getElementsByTagName('fieldset');
   var address = document.getElementById('address');
   var mapPinMain = map.querySelector('.map__pin--main');
   var mapOverlay = document.querySelector('.map__overlay');
 
-  var disableElements = function () {
-    window.form.form.classList.add('ad-form--disabled');
-    for (var i = 0; i < fieldsets.length; i++) {
-      fieldsets[i].setAttribute('disabled', 'disabled');
+  address.readOnly = true;
+
+  // активация карты
+  var makeMapActive = function () {
+    if (map.classList.contains('map--faded')) {
+      map.classList.remove('map--faded');
+      window.form.enableFormElements();
+      var onSuccess = function (data) {
+        window.data.advertisement = data;
+        window.pin.drawMapsPin(data);
+      };
+      window.backend.load(onSuccess, window.form.onError);
     }
   };
-  disableElements();
 
-  var enableElements = function () {
-    map.classList.remove('map--faded');
-    window.form.form.classList.remove('ad-form--disabled');
-    for (var i = 0; i < fieldsets.length; i++) {
-      fieldsets[i].removeAttribute('disabled');
-    }
+  // деактивация карты
+  var makeMapInactive = function () {
+    resetPinMain();
+    clearMap();
+    map.classList.add('map--faded');
   };
-
 
   // перемещение метки по клику
   mapPinMain.addEventListener('mousedown', function (evt) {
@@ -50,8 +56,8 @@
       mapPinMain.style.top = (mapPinMain.offsetTop - shift.y) + 'px';
       mapPinMain.style.left = (mapPinMain.offsetLeft - shift.x) + 'px';
 
-      if ((mapPinMain.offsetTop - shift.y) > mapOverlay.offsetHeight - MAP_PIN_MAIN_HEIGHT) {
-        mapPinMain.style.top = mapOverlay.offsetHeight - MAP_PIN_MAIN_HEIGHT + 'px';
+      if ((mapPinMain.offsetTop - shift.y) > filters.offsetTop - (MAP_PIN_MAIN_HEIGHT + MAP_PIN_MAIN_TAIL)) {
+        mapPinMain.style.top = filters.offsetTop - (MAP_PIN_MAIN_HEIGHT + MAP_PIN_MAIN_TAIL) + 'px';
       }
 
       if ((mapPinMain.offsetTop - shift.y) < mapOverlay.offsetTop + MAP_PIN_MAIN_HEIGHT) {
@@ -71,9 +77,8 @@
       upEvt.preventDefault();
       document.removeEventListener('mousemove', onMouseMove);
       document.removeEventListener('mouseup', onMouseUp);
-      enableElements();
-      window.pin.drawMapsPin(window.data.advertisement);
-      window.form.setDefaultCapacity();
+      makeMapActive();
+      // window.form.setDefaultCapacity();
       setAddress();
     };
 
@@ -87,21 +92,31 @@
     mapPinMain.style.top = 375 + 'px';
   };
 
+  // очищает карту
+  var clearMap = function () {
+    var pinList = document.querySelectorAll('.map__pin');
+    for (var i = 1; i < pinList.length; i++) {
+      pinList[i].remove();
+    }
+    window.card.clearAdverts();
+  };
+
   // определение адреса
   var setAddress = function () {
     var mapPinMainPositionX = Math.round(parseInt(mapPinMain.style.left, 10) + MAP_PIN_MAIN_WIDTH / 2);
     if (map.classList.contains('map--faded')) {
-      var mapPinMainPositionY = Math.round(parseInt(mapPinMain.style.top, 10) + MAP_PIN_MAIN_HEIGHT / 2);
+      var mapPinMainPositionY = Math.round(parseInt(mapPinMain.style.top, 10) + ((MAP_PIN_MAIN_HEIGHT + MAP_PIN_MAIN_TAIL) / 2));
     } else {
-      mapPinMainPositionY = Math.round(parseInt(mapPinMain.style.top, 10) + MAP_PIN_MAIN_HEIGHT);
+      mapPinMainPositionY = Math.round(parseInt(mapPinMain.style.top, 10) + (MAP_PIN_MAIN_HEIGHT + MAP_PIN_MAIN_TAIL));
     }
     address.value = mapPinMainPositionX + ',' + mapPinMainPositionY;
   };
   setAddress();
+
   window.map = {
     map: map,
-    resetPinMain: resetPinMain,
-    disableElements: disableElements,
-    setAddress: setAddress
+    makeMapInactive: makeMapInactive,
+    setAddress: setAddress,
+    clearMap: clearMap
   };
 })();
