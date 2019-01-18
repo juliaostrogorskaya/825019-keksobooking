@@ -2,8 +2,11 @@
 (function () {
   var MAP_PIN_MAIN_WIDTH = 62;
   var MAP_PIN_MAIN_HEIGHT = 62;
-  var MAP_PIN_MAIN_TAIL = 20;
-  var filters = document.querySelector('.map__filters-container');
+  var MAP_PIN_MAIN_TAIL = 22;
+  var MAP_PIN_MAIN_POSITION_X = 570;
+  var MAP_PIN_MAIN_POSITION_Y = 375;
+  var MIN_Y = 130;
+  var MAX_Y = 630;
   var map = document.querySelector('.map');
   var address = document.getElementById('address');
   var mapPinMain = map.querySelector('.map__pin--main');
@@ -15,10 +18,11 @@
   var makeMapActive = function () {
     if (map.classList.contains('map--faded')) {
       map.classList.remove('map--faded');
+      window.filters.activate();
       window.form.enableFormElements();
       var onSuccess = function (data) {
         window.data.advertisement = data;
-        window.pin.drawMapsPin(data);
+        window.pin.drawMapsPin(window.data.advertisement);
       };
       window.backend.load(onSuccess, window.form.onError);
     }
@@ -28,6 +32,7 @@
   var makeMapInactive = function () {
     resetPinMain();
     clearMap();
+    window.filters.deactivate();
     map.classList.add('map--faded');
   };
 
@@ -56,12 +61,11 @@
       mapPinMain.style.top = (mapPinMain.offsetTop - shift.y) + 'px';
       mapPinMain.style.left = (mapPinMain.offsetLeft - shift.x) + 'px';
 
-      if ((mapPinMain.offsetTop - shift.y) > filters.offsetTop - (MAP_PIN_MAIN_HEIGHT + MAP_PIN_MAIN_TAIL)) {
-        mapPinMain.style.top = filters.offsetTop - (MAP_PIN_MAIN_HEIGHT + MAP_PIN_MAIN_TAIL) + 'px';
+      if ((mapPinMain.offsetTop - shift.y) < (MIN_Y - (MAP_PIN_MAIN_HEIGHT + MAP_PIN_MAIN_TAIL))) {
+        mapPinMain.style.top = MIN_Y - (MAP_PIN_MAIN_HEIGHT + MAP_PIN_MAIN_TAIL) + 'px';
       }
-
-      if ((mapPinMain.offsetTop - shift.y) < mapOverlay.offsetTop + MAP_PIN_MAIN_HEIGHT) {
-        mapPinMain.style.top = mapOverlay.offsetTop + MAP_PIN_MAIN_HEIGHT + 'px';
+      if ((mapPinMain.offsetTop - shift.y) > (MAX_Y - (MAP_PIN_MAIN_HEIGHT + MAP_PIN_MAIN_TAIL))) {
+        mapPinMain.style.top = MAX_Y - (MAP_PIN_MAIN_HEIGHT + MAP_PIN_MAIN_TAIL) + 'px';
       }
 
       if ((mapPinMain.offsetLeft - shift.x) > (mapOverlay.offsetWidth - MAP_PIN_MAIN_WIDTH)) {
@@ -78,7 +82,6 @@
       document.removeEventListener('mousemove', onMouseMove);
       document.removeEventListener('mouseup', onMouseUp);
       makeMapActive();
-      // window.form.setDefaultCapacity();
       setAddress();
     };
 
@@ -88,8 +91,8 @@
 
   // возвращает главную метку в исходное положение
   var resetPinMain = function () {
-    mapPinMain.style.left = 570 + 'px';
-    mapPinMain.style.top = 375 + 'px';
+    mapPinMain.style.left = MAP_PIN_MAIN_POSITION_X + 'px';
+    mapPinMain.style.top = MAP_PIN_MAIN_POSITION_Y + 'px';
   };
 
   // очищает карту
@@ -116,7 +119,6 @@
   window.map = {
     map: map,
     makeMapInactive: makeMapInactive,
-    setAddress: setAddress,
     clearMap: clearMap
   };
 })();

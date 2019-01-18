@@ -1,7 +1,7 @@
 'use strict';
 (function () {
   var mapCardTemplate = document.querySelector('#card').content.querySelector('.map__card');
-  var OFFER_TYPES = {
+  var OfferTypes = {
     'flat': 'Квартира',
     'house': 'Дом',
     'bungalo': 'Бунгало',
@@ -51,7 +51,7 @@
     cardElement.querySelector('.popup__title').textContent = advert.offer.title;
     cardElement.querySelector('.popup__text--address').textContent = advert.offer.address;
     cardElement.querySelector('.popup__text--price').textContent = advert.offer.price + ' ₽/ночь';
-    cardElement.querySelector('.popup__type').textContent = OFFER_TYPES[advert.offer.type];
+    cardElement.querySelector('.popup__type').textContent = OfferTypes[advert.offer.type];
     cardElement.querySelector('.popup__text--capacity').textContent = advert.offer.rooms + ' комнаты для '
     + advert.offer.guests + ' гостей';
     cardElement.querySelector('.popup__text--time').textContent = 'Заезд после ' + advert.offer.checkin
@@ -123,10 +123,7 @@
 
   // закрытие объявления по esc
   document.addEventListener('keydown', function (evt) {
-    var advertElement = document.querySelector('.map__card');
-    if (evt.keyCode === window.util.ESC_KEYCODE && advertElement) {
-      advertElement.remove();
-    }
+    window.util.isEscEvent(evt, clearAdverts);
   });
 
   window.card = {

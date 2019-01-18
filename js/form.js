@@ -10,18 +10,24 @@
   var roomNumber = document.getElementById('room_number');
   var guestNumber = document.getElementById('capacity');
   var title = document.getElementById('title');
-  var main = document.querySelector('main');
-
+  var timeinSelect = form.querySelector('[name="timein"]');
+  var timeoutSelect = form.querySelector('[name="timeout"]');
+  var successTemplate = document.querySelector('#success').content;
+  var errorTemplate = document.querySelector('#error').content;
+  var successSelector = '.success';
+  var errorSelector = '.error';
+  var minPrices = {
+    'flat': 1000,
+    'house': 5000,
+    'palace': 10000
+  };
 
   // выбор цены и типа жилья
-  function setMinPrice(propertyType, priceInput) {
-    var minPrices = {
-      'flat': 1000,
-      'house': 5000,
-      'palace': 10000
-    };
+  var setMinPrice = function (propertyType, priceInput) {
     priceInput.setAttribute('min', minPrices[propertyType] || 0);
-  }
+    priceInput.setAttribute('placeholder', minPrices[propertyType] || 0);
+  };
+
   typeOfFlat.addEventListener('change', function () {
     setMinPrice(typeOfFlat.value, price);
   });
@@ -73,6 +79,25 @@
     }
   };
 
+  // синхронизация времени заезда выезда
+  function syncFields(select1, select2) {
+    var value1 = select1.value;
+    var options = select2.options;
+    for (var i = 0; i < options.length; i++) {
+      if (options[i].value === value1) {
+        select2.selectedIndex = i;
+      }
+    }
+  }
+
+  timeinSelect.addEventListener('change', function () {
+    syncFields(timeinSelect, timeoutSelect);
+  });
+
+  timeoutSelect.addEventListener('change', function () {
+    syncFields(timeoutSelect, timeinSelect);
+  });
+
   // проверка правильности введенных данных
   var checkValidity = function (element) {
     if (!element.validity.valid) {
@@ -96,35 +121,18 @@
 
   // успешная отправка данных
   var onLoad = function () {
-    var successMessage = document.querySelector('#success').content.querySelector('.success');
-    var message = main.appendChild(successMessage.cloneNode(true));
-    closeMessage(message);
+    window.messages.renderStatusMessage(successTemplate, successSelector);
+    deactivateForm();
   };
 
   // неуспешная отправка данных
   var onError = function () {
-    var errorMessage = document.querySelector('#error').content.querySelector('.error');
-    var message = main.appendChild(errorMessage.cloneNode(true));
-    closeMessage(message);
-  };
-
-  // закрытие сообщений
-  var closeMessage = function (message) {
-    document.addEventListener('click', function () {
-      message.remove();
-    });
-
-    document.addEventListener('keydown', function (evt) {
-      if (evt.keyCode === window.util.ESC_KEYCODE) {
-        message.remove();
-      }
-    });
+    window.messages.renderStatusMessage(errorTemplate, errorSelector);
   };
 
   form.addEventListener('submit', function (evt) {
     window.backend.upload(new FormData(form), onLoad, onError);
     evt.preventDefault();
-    deactivateForm();
   });
 
   // деактивация элементов формы
@@ -133,9 +141,8 @@
     for (var i = 0; i < fieldsets.length; i++) {
       fieldsets[i].setAttribute('disabled', 'disabled');
     }
-
   };
-
+  disableFormElements();
 
   // активация формы
   var enableFormElements = function () {

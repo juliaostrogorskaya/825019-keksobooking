@@ -7,6 +7,8 @@
   var pinsArea = window.map.map.querySelector('.map__pins');
   var mapPinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
   var mapContainer = window.map.map.querySelector('.map__filters-container');
+
+
   /**
      * Создает метку на карте
 
@@ -22,6 +24,7 @@
     mapPinElement.addEventListener('click', function () {
       window.card.clearAdverts();
       window.map.map.insertBefore(window.card.renderCards(advert), mapContainer);
+      mapPinElement.classList.add('map__pin--active');
     });
 
     return mapPinElement;
@@ -34,9 +37,12 @@
      * @return {object} fragment Метки.
      */
   var renderMapPinsFragment = function (adverts) {
+    var filteredAdverts = adverts.filter(window.filters.checkAdvert);
     var fragment = document.createDocumentFragment();
-    for (var i = 0; i < ADVERT_NUMBER; i++) {
-      fragment.appendChild(renderMapPin(adverts[i]));
+
+    var num = Math.min(filteredAdverts.length, ADVERT_NUMBER);
+    for (var i = 0; i < num; i++) {
+      fragment.appendChild(renderMapPin(filteredAdverts[i]));
     }
     return fragment;
   };
