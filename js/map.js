@@ -24,8 +24,15 @@
         window.data.advertisement = data;
         window.pin.drawMapsPin(window.data.advertisement);
       };
-      window.backend.load(onSuccess, window.form.onError);
+      window.backend.load(onSuccess, onError);
     }
+  };
+
+  // ошибка
+  var onError = function (errorMessage) {
+    window.messages.renderStatusMessage(window.form.errorTemplate, window.form.errorSelector);
+    var node = document.querySelector('.error__message');
+    node.textContent = errorMessage;
   };
 
   // деактивация карты

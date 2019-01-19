@@ -1,12 +1,13 @@
 'use strict';
 (function () {
-  var mapCardTemplate = document.querySelector('#card').content.querySelector('.map__card');
-  var OfferTypes = {
+  var OfferType = {
     'flat': 'Квартира',
     'house': 'Дом',
     'bungalo': 'Бунгало',
     'palace': 'Дворец'
   };
+  var mapCardTemplate = document.querySelector('#card').content.querySelector('.map__card');
+
 
   /**
      * Создает фото жилья.
@@ -51,7 +52,7 @@
     cardElement.querySelector('.popup__title').textContent = advert.offer.title;
     cardElement.querySelector('.popup__text--address').textContent = advert.offer.address;
     cardElement.querySelector('.popup__text--price').textContent = advert.offer.price + ' ₽/ночь';
-    cardElement.querySelector('.popup__type').textContent = OfferTypes[advert.offer.type];
+    cardElement.querySelector('.popup__type').textContent = OfferType[advert.offer.type];
     cardElement.querySelector('.popup__text--capacity').textContent = advert.offer.rooms + ' комнаты для '
     + advert.offer.guests + ' гостей';
     cardElement.querySelector('.popup__text--time').textContent = 'Заезд после ' + advert.offer.checkin
@@ -116,6 +117,10 @@
   // удаляет открытые объявления
   var clearAdverts = function () {
     var advertElements = document.querySelector('.map__card');
+    var activePin = document.querySelector('.map__pin--active');
+    if (activePin) {
+      activePin.classList.remove('map__pin--active');
+    }
     if (advertElements) {
       advertElements.remove();
     }

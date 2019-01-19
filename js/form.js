@@ -1,5 +1,12 @@
 'use strict';
 (function () {
+  var minPrices = {
+    'flat': 1000,
+    'house': 5000,
+    'palace': 10000
+  };
+  var successSelector = '.success';
+  var errorSelector = '.error';
   var notice = document.querySelector('.notice');
   var form = notice.querySelector('.ad-form');
   var fieldsets = form.getElementsByTagName('fieldset');
@@ -14,13 +21,7 @@
   var timeoutSelect = form.querySelector('[name="timeout"]');
   var successTemplate = document.querySelector('#success').content;
   var errorTemplate = document.querySelector('#error').content;
-  var successSelector = '.success';
-  var errorSelector = '.error';
-  var minPrices = {
-    'flat': 1000,
-    'house': 5000,
-    'palace': 10000
-  };
+
 
   // выбор цены и типа жилья
   var setMinPrice = function (propertyType, priceInput) {
@@ -173,6 +174,8 @@
 
   window.form = {
     enableFormElements: enableFormElements,
-    form: form
+    form: form,
+    errorTemplate: errorTemplate,
+    errorSelector: errorSelector
   };
 })();
