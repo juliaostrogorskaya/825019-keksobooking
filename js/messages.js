@@ -27,7 +27,7 @@
   };
 
   var onEscPress = function (evt) {
-    window.utils.isEscEvent(evt, closeMessage);
+    window.util.isEscEvent(evt, closeMessage);
   };
 
   window.messages = {
